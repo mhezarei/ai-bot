@@ -1,11 +1,14 @@
 from datetime import datetime
+
+import requests
+
 from APIs.religious_time import ReligiousTime
 from APIs.time import Time
 from APIs.weather import Weather
+from APIs.date import Date
 
 
 def test_rel_time():
-	# assuming that the time format is "YYYY-MM-DD" and IT SHOULD BE GREGORIAN.
 	rel_time = "اذان صبح"
 	date = "2020-05-01"
 	city = "تهران"
@@ -29,10 +32,8 @@ def test_time():
 
 
 def test_weather():
-	# assuming that the time format is "YYYY-MM-DD HH:MM" or "YYYY-MM-DD"
-	# and IT SHOULD BE GREGORIAN.
-	dt = "2020-12-20"
-	city = "مسکو"
+	dt = "2020-12-22 21:49"
+	city = "شیراز"
 	
 	try:
 		datetime.strptime(dt, "%Y-%m-%d %H:%M")
@@ -45,12 +46,23 @@ def test_weather():
 	
 	current_dt = int(datetime.timestamp(datetime.now()))
 	w = Weather(city, dt, current_dt)
-	w.send_request()
-
+	res = w.send_request()
+	print(res)
+	
+	
+def test_date():
+	# if date is not specified
+	# date = datetime.strftime(datetime.now(), "%Y-%m-%d")
+	date = "2020-12-22"
+	d = Date("gregorian", "hijri", date)
+	res = d.convert_date()
+	print(res)
+	
 
 def main():
-	test_weather()
-	# print(datetime.timestamp(datetime.now()))
+	# All the time formats are in "YYYY-MM-DD HH:MM" or "YYYY-MM-DD"
+	# and THEY SHOULD BE GREGORIAN.
+	test_date()
 	
 
 if __name__ == '__main__':

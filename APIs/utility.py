@@ -39,7 +39,7 @@ def split_date(date: str) -> Tuple[str, ...]:
 # 	time = ("12", "00") if len(dt_split) == 1 else tuple(dt_split[1].split(':'))
 # 	return date + time
 
-def parse_datetime(dt: str):
+def parse_datetime(dt: str) -> int:
 	temp = dt
 	if len(dt.split()) == 1:
 		temp += " 12:00"
