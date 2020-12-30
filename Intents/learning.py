@@ -1,28 +1,13 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[31]:
-
-
 import numpy as np
 import pandas as pd
-from rule_based import total_score
+from Intents.rule_based import total_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-
-
-# In[32]:
-
-
 import warnings
 warnings.filterwarnings("ignore")
-
-
-# In[33]:
-
 
 mapping = {0: "weather", 
            1: "religious time", 
@@ -30,15 +15,7 @@ mapping = {0: "weather",
            3: "date", 
            4: "unknown"}
 
-
-# In[34]:
-
-
-df = pd.read_csv("mh_clean.csv", index_col=0)
-
-
-# In[47]:
-
+df = pd.read_csv("Intents/mh_clean.csv", index_col=0)
 
 def train_model (): 
     model = Sequential()
@@ -126,7 +103,7 @@ def predict(sent: str) -> int:
     elif abs(sc[ind[0]] - sc[ind[1]]) <= 2:
         return mapping[ind[0]]  # CHECK THIS PLEASE
     elif ind[0] == 4 and max(list(sc.values())) <= 2 and sc[ind[1]] != 2:
-        return 'unknown'
+        return 'unknown',
     # HANDLE NN BEING RIGHT AND RULE-BASED BEING WRONG
     else:
         return mapping[ind[0]]

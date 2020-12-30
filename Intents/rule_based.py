@@ -4,7 +4,7 @@
 # In[3]:
 
 
-get_ipython().run_line_magic('config', 'Completer.use_jedi = False')
+# get_ipython().run_line_magic('config', 'Completer.use_jedi = False')
 
 
 # In[4]:
@@ -73,7 +73,7 @@ def get_list_from(filename: str) -> list:
 
 
 def parse_shamsi_events(sw: list) -> Tuple[list, list]:
-    events = pd.read_csv("shamsi_events.csv", encoding="utf-8")
+    events = pd.read_csv("Intents/shamsi_events.csv", encoding="utf-8")
     combs = events["event"].tolist()
     words = []
     for c in combs:
@@ -85,9 +85,9 @@ def parse_shamsi_events(sw: list) -> Tuple[list, list]:
 
 
 def initialize() -> Tuple[list, list]:
-    sw = get_sw("stop_words_short.txt")
-    used_words = get_list_from("used_words.txt")
-    used_combs = get_list_from("used_combs.txt")
+    sw = get_sw("Intents/stop_words_short.txt")
+    used_words = get_list_from("Intents/used_words.txt")
+    used_combs = get_list_from("Intents/used_combs.txt")
     
     w, c = parse_shamsi_events(sw)
     used_words[3] += w
