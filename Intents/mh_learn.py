@@ -6,7 +6,7 @@
 
 import numpy as np
 import pandas as pd
-from Intents.rule_based import total_score
+from Intents.rule_based import rule_based_score
 
 
 # In[37]:
@@ -131,7 +131,7 @@ def predict(sent: str) -> int:
     print(f"The first predicted class: {mapping[ind[0]]}")
     print(f"The second predicted class: {mapping[ind[1]]}")
     
-    sc = total_score(sent)
+    sc = rule_based_score(sent)
     sc[4] = 0
     print(sc)
     

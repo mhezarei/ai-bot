@@ -2,7 +2,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import numpy as np
 import pandas as pd
-from Intents.rule_based import total_score
+from Intents.rule_based import rule_based_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, \
 	Dense
@@ -18,13 +18,13 @@ mapping = {0: "weather",
            4: "unknown"}
 
 df = pd.read_csv("Intents/mh_clean.csv", index_col=0)
-x = df["sentence"].values
-y = df["class"].values
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25,
+df_x = df["sentence"].values
+df_y = df["class"].values
+x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.25,
                                                     random_state=42)
 tokenizer = Tokenizer()
-tokenizer.fit_on_texts(x)
-max_len = max([len(s.split()) for s in x])
+tokenizer.fit_on_texts(df_x)
+max_len = max([len(s.split()) for s in df_x])
 enc_docs = tokenizer.texts_to_sequences(x_train)
 x_train = pad_sequences(enc_docs, maxlen=max_len, padding='post')
 enc_docs = tokenizer.texts_to_sequences(x_test)
@@ -52,21 +52,41 @@ model, eval_summary = train_model()
 
 
 def predict(sent: str) -> int:
+	unk = 5
 	enc = tokenizer.texts_to_sequences(np.array([sent]))
 	s = pad_sequences(enc, maxlen=max_len, padding='post')
-	pred = model.predict(s)
-	ind = np.argpartition(pred, -2)[-2:].flatten().tolist()
-	ind.reverse()
+	rank = model.predict(s).flatten()
+	rank = (np.argpartition(rank, -2)[-2:])[::-1]
+	# +1 since the indices are 0-based but the classes are 1-based
+	first, second = rank[0] + 1, rank[1] + 1
 	
-	sc = total_score(sent)
-	sc[4] = 0
+	rb_score = rule_based_score(sent)
+	rb_score[unk] = 0
+	# rule-based score of the predicted classes
+	x, y = rb_score[first], rb_score[second]
 	
-	if sc[ind[0]] >= 2 and sc[ind[1]] <= 2:
-		return ind[0] + 1 if ind[0] != 4 else -1
-	elif abs(sc[ind[0]] - sc[ind[1]]) <= 2:
-		return ind[0] + 1 if ind[0] != 4 else -1  # CHECK THIS PLEASE
-	elif ind[0] == 4 and max(list(sc.values())) <= 2 and sc[ind[1]] != 2:
-		return -1
-	# HANDLE NN BEING RIGHT AND RULE-BASED BEING WRONG
-	else:
-		return ind[0] + 1 if ind[0] != 4 else -1
+	print(x, y, first, second, rb_score)
+	
+	if first != unk and second != unk:
+		if y - x >= 2:
+			return second
+		else:
+			return first
+	elif first != unk and second == unk:
+		if x >= 1:
+			return first
+		else:
+			s = max(rb_score, key=rb_score.get)
+			if s != first and rb_score[s] >= 1:
+				return s
+			else:
+				return -1
+	elif first == unk and second != unk:
+		if y >= 1:
+			return second
+		else:
+			s = max(rb_score, key=rb_score.get)
+			if s != second and rb_score[s] >= 1:
+				return s
+			else:
+				return -1

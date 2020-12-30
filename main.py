@@ -1,4 +1,5 @@
 from AIBOT import BOT
 
 
-print(BOT().AIBOT("هوای دیشب سردتر بود یا امشب؟"))
+sent = "دیروز اذان ظهر سردتر بود یا اذان مغرب؟"
+print(BOT().AIBOT(sent))

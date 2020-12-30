@@ -7,8 +7,8 @@ from typing import Tuple
 
 unused_chars = ['-', '،', '_', '\n', '//', '/', '\u200c', 'ـ', '?', '؟']
 norm = Normalizer()
-COMB_SCORE = 6
-WORD_SCORE = 2
+COMB_SCORE = 3
+WORD_SCORE = 1
 
 
 def get_sw(filename: str) -> list:
@@ -64,9 +64,9 @@ def score(sent: str, c: int) -> int:
     return ret
 
 
-def total_score(sent: str) -> dict:
+def rule_based_score(sent: str) -> dict:
     sent = norm.normalize(sent)
     scoring = {}
     for i in range(4):
-        scoring[i] = score(sent, i)
+        scoring[i + 1] = score(sent, i)
     return scoring
