@@ -1,7 +1,4 @@
 from datetime import datetime
-
-import requests
-
 from APIs.religious_time import ReligiousTime
 from APIs.time import Time
 from APIs.weather import Weather
@@ -32,8 +29,8 @@ def test_time():
 
 
 def test_weather():
-	dt = "2020-12-22 21:49"
-	city = "شیراز"
+	dt = "2020-12-26 21:49"
+	city = "دوشنبه"
 	
 	try:
 		datetime.strptime(dt, "%Y-%m-%d %H:%M")
@@ -47,21 +44,24 @@ def test_weather():
 	current_dt = int(datetime.timestamp(datetime.now()))
 	w = Weather(city, dt, current_dt)
 	res = w.send_request()
-	print(res)
+	print(res[0])
+	print(res[1])
 	
 	
 def test_date():
 	# if date is not specified
 	# date = datetime.strftime(datetime.now(), "%Y-%m-%d")
-	date = "2020-12-22"
-	d = Date("gregorian", "hijri", date)
-	res = d.convert_date()
-	print(res)
+	date = "1399-12-22"
+	d = Date("shamsi", "greg", date, "روز پرستار")
+	print(d.get_occasion_date())
 	
 
 def main():
 	# All the time formats are in "YYYY-MM-DD HH:MM" or "YYYY-MM-DD"
-	# and THEY SHOULD BE GREGORIAN.
+	# and THEY SHOULD BE GREGORIAN except for date
+	test_time()
+	test_weather()
+	test_rel_time()
 	test_date()
 	
 

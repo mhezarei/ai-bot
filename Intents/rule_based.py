@@ -1,63 +1,20 @@
-#!/usr/bin/env python
-# coding: utf-8
+import os
 
-# In[3]:
-
-
-get_ipython().run_line_magic('config', 'Completer.use_jedi = False')
-
-
-# In[4]:
-
-
-import numpy as np
 import pandas as pd
 from hazm import *
-from collections import Counter
 from typing import Tuple
 
 
-# In[ ]:
-
-
-
-
-
-# In[5]:
-
-
 unused_chars = ['-', '،', '_', '\n', '//', '/', '\u200c', 'ـ', '?', '؟']
-
-
-# In[6]:
-
-
 norm = Normalizer()
-
-
-# In[7]:
-
-
 COMB_SCORE = 6
 WORD_SCORE = 2
-
-
-# In[ ]:
-
-
-
-
-
-# In[8]:
 
 
 def get_sw(filename: str) -> list:
     with open(filename, encoding="utf-8") as f:
         sw = f.read().split('\n')
         return sw
-
-
-# In[9]:
 
 
 def get_list_from(filename: str) -> list:
@@ -69,25 +26,19 @@ def get_list_from(filename: str) -> list:
         return ret
 
 
-# In[10]:
-
-
 def parse_shamsi_events(sw: list) -> Tuple[list, list]:
-    events = pd.read_csv("shamsi_events.csv", encoding="utf-8")
-    combs = events["event"].tolist()
-    words = []
-    for c in combs:
-        words += [w for w in norm.normalize(c).split(' ') if w not in sw]
-    return list(words), combs
-
-
-# In[11]:
+    events = pd.read_csv("Intents/shamsi_events.csv", encoding="utf-8")
+    temp_combs = events["event"].tolist()
+    temp_words = []
+    for c in temp_combs:
+        temp_words += [w for w in norm.normalize(c).split(' ') if w not in sw]
+    return list(temp_words), temp_combs
 
 
 def initialize() -> Tuple[list, list]:
-    sw = get_sw("stop_words_short.txt")
-    used_words = get_list_from("used_words.txt")
-    used_combs = get_list_from("used_combs.txt")
+    sw = get_sw("Intents/stop_words_short.txt")
+    used_words = get_list_from("Intents/used_words.txt")
+    used_combs = get_list_from("Intents/used_combs.txt")
     
     w, c = parse_shamsi_events(sw)
     used_words[3] += w
@@ -99,25 +50,7 @@ def initialize() -> Tuple[list, list]:
     return used_words, used_combs
 
 
-# In[ ]:
-
-
-
-
-
-# In[12]:
-
-
 words, combs = initialize()
-
-
-# In[ ]:
-
-
-
-
-
-# In[13]:
 
 
 def score(sent: str, c: int) -> int:
@@ -131,31 +64,9 @@ def score(sent: str, c: int) -> int:
     return ret
 
 
-# In[23]:
-
-
 def total_score(sent: str) -> dict:
+    sent = norm.normalize(sent)
     scoring = {}
     for i in range(4):
         scoring[i] = score(sent, i)
     return scoring
-
-
-# In[ ]:
-
-
-
-
-
-# In[24]:
-
-
-sent = "فردا هوا ابری است؟"
-total_score(norm.normalize(sent))
-
-
-# In[ ]:
-
-
-
-

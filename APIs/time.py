@@ -7,7 +7,6 @@ from APIs.utility import get_english_names
 class Time:
 	def __init__(self, city: str):
 		self.city, self.country = get_english_names(city)
-		# self.base_url = "https://www.amdoren.com/api/timezone.php?api_key=6wD3wrpatDFSJF6Xs5LfPQ2wf8NUWj"
 		self.base_url = "https://www.timeanddate.com/worldclock/?query="
 	
 	def send_request(self):

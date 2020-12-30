@@ -12,14 +12,9 @@ class Weather:
 		self.current_url = "api.openweathermap.org/data/2.5/weather?appid=345d8217035c76f9bd352963c9f009a7&"
 		self.forecast_url = "https://api.openweathermap.org/data/2.5/onecall?appid=345d8217035c76f9bd352963c9f009a7&units=metrics&exclude=alerts,minutely&"
 		self.history_url = "https://api.openweathermap.org/data/2.5/onecall/timemachine?appid=345d8217035c76f9bd352963c9f009a7&units=metric&"
+		self.url = ""
 	
-	# current weather IDK this yet
-	
-	# hourly forecast for 2 days
-	# daily forecast for 7 days
-	# historical for 5 days
-	
-	def send_request(self) -> Tuple[int, int]:
+	def send_request(self) -> Tuple[str, str]:
 		if self.current_dt - self.dt >= 5 * 24 * 3600:
 			raise ValueError(
 				"The requested past time must be within the last 5 days!")
@@ -31,9 +26,11 @@ class Weather:
 			url = self.history_url + '&'.join(
 				["lat=" + str(self.lat), "lon=" + str(self.lon),
 				 "dt=" + str(self.dt)])
+			self.url = url
 		else:
 			url = self.forecast_url + '&'.join(
 				["lat=" + str(self.lat), "lon=" + str(self.lon)])
+			self.url = url
 		
 		resp = requests.get(url)
 		if resp.status_code / 100 != 2:
@@ -45,10 +42,10 @@ class Weather:
 		else:
 			return self.parse_future(resp.json())
 	
-	def parse_history(self, data) -> Tuple[int, int]:
+	def parse_history(self, data) -> Tuple[str, str]:
 		return self.extract_cond(data["current"])
 	
-	def parse_future(self, data) -> Tuple[int, int]:
+	def parse_future(self, data) -> Tuple[str, str]:
 		dt_utc = self.dt + 12600
 		for h in data["hourly"]:
 			if abs(dt_utc - h["dt"]) <= 1800:
@@ -56,21 +53,21 @@ class Weather:
 		for d in data["daily"]:
 			if abs(dt_utc - d["dt"]) <= 12 * 3600:
 				return self.extract_cond(d)
-		return -1, -1
+		return "", ""
 	
-	def extract_cond(self, pred: dict) -> Tuple[int, int]:
+	def extract_cond(self, pred: dict) -> Tuple[str, str]:
 		# Return the temperature and weather condition code
 		temp = pred["temp"]
 		cond = pred["weather"][0]["main"].lower()
-		cond_num = -1
+		cond_persian = -1
 		if "cloud" in cond:
-			cond_num = 1
+			cond_persian = "ابری"
 		elif "rain" in cond:
-			cond_num = 2
+			cond_persian = "بارانی"
 		elif "clear" in cond:
-			cond_num = 3
+			cond_persian = "آفتابی"
 		elif "snow" in cond:
-			cond_num = 4
+			cond_persian = "برفی"
 		elif "storm" in cond:
-			cond_num = 5
-		return temp, cond_num
+			cond_persian = "طوفانی"
+		return str(temp), cond_persian
