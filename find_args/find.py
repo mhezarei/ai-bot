@@ -15,11 +15,11 @@ def find(sentence_temp):
     religious_times = find_religious_time(sentence)
     for religious_time in religious_times:
         sentence = sentence.replace(religious_time, ' ')
-    # sentence_ner, sentence_ner_lem = pipeline_sentence(sentence)
-    # tokens, tokens_lem = find_tokens_in_sentence(sentence_ner, sentence_ner_lem)
-    tokens, tokens_lem = ([{'entity_group': 'organization', 'index': 3, 'word': 'جمهوری اسلامی'},
-                       {'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}],
-                      [{'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}])
+    sentence_ner, sentence_ner_lem = pipeline_sentence(sentence)
+    tokens, tokens_lem = find_tokens_in_sentence(sentence_ner, sentence_ner_lem)
+    # tokens, tokens_lem = ([{'entity_group': 'organization', 'index': 3, 'word': 'جمهوری اسلامی'},
+    #                    {'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}],
+    #                   [{'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}])
     cities = find_cities(tokens)
     # if intent = unknown pass -1 as second arg
     dates = find_dates(tokens_lem)
