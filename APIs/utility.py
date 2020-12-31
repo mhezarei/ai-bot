@@ -6,21 +6,24 @@ from hijri_converter import convert
 
 
 def get_english_names(city: str) -> Tuple[str, str]:
-	df = pd.read_csv("APIs/Databases/cities15000.txt", usecols=[1, 2, 3, 8, 14], sep='\t',
+	df = pd.read_csv("APIs/Databases/cities15000.txt",
+	                 usecols=[1, 2, 3, 8, 14], sep='\t',
 	                 encoding="utf-8", header=None)
 	res = df[df[3].str.contains(city) == True]
 	target_row = res.sort_values(14, ascending=False).iloc[0]
 	eng_city = target_row[2]
 	cc = target_row[8]
 	
-	df = pd.read_csv("APIs/Databases/IP2LOCATION-COUNTRY-MULTILINGUAL.CSV", encoding="utf-8",
+	df = pd.read_csv("APIs/Databases/IP2LOCATION-COUNTRY-MULTILINGUAL.CSV",
+	                 encoding="utf-8",
 	                 header=None, skiprows=3736, nrows=249)
 	eng_country = df[df[2] == cc].iloc[0][5]
 	return eng_city, eng_country
 
 
 def get_lat_lon(eng_city: str) -> Tuple[float, float]:
-	df = pd.read_csv("APIs/Databases/cities15000.txt", usecols=[2, 4, 5, 14], sep='\t',
+	df = pd.read_csv("APIs/Databases/cities15000.txt", usecols=[2, 4, 5, 14],
+	                 sep='\t',
 	                 encoding="utf-8", header=None)
 	res = df[df[2].str.contains(eng_city) == True]
 	target_row = res.sort_values(14, ascending=False).iloc[0]

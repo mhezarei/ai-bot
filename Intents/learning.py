@@ -1,4 +1,5 @@
 import os
+
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import numpy as np
 import pandas as pd
@@ -9,7 +10,6 @@ from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, \
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-
 
 mapping = {0: "weather",
            1: "religious time",
@@ -64,8 +64,6 @@ def predict(sent: str) -> int:
 	rb_score[unk] = 0
 	# rule-based score of the predicted classes
 	x, y = rb_score[first], rb_score[second]
-	
-	print(x, y, first, second, rb_score)
 	
 	if first != unk and second != unk:
 		if y - x >= 2:

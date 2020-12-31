@@ -8,9 +8,11 @@ class Time:
 	def __init__(self, city: str):
 		self.city, self.country = get_english_names(city)
 		self.base_url = "https://www.timeanddate.com/worldclock/?query="
+		self.url = ""
 	
 	def send_request(self):
 		url = self.base_url + '+'.join([x for x in self.city.split()])
+		self.url = url
 		txt = requests.get(url).text
 		soup = BeautifulSoup(txt, "html.parser")
 		listing_select = soup.select("#p0")

@@ -1,11 +1,12 @@
 from AIBOT import BOT
 
 
-sent = "دیروز اذان ظهر سردتر بود یا اذان مغرب؟"
-print(BOT().AIBOT(sent))
+def main():
+	my_bot = BOT()
+	sentence = "قد من بلندتر است یا تو؟"
+	answer = my_bot.AIBOT(sentence)
+	print(answer)
+
 
 if __name__ == "__main__":
-    my_bot = BOT()
-    sentence = ' روز جمهوری اسلامی در سال ۱۴۰۰ چه روزی است؟'
-    answer = my_bot.AIBOT(sentence)
-    print(answer)
+	main()

@@ -38,7 +38,8 @@ def test_weather():
 		try:
 			datetime.strptime(dt, "%Y-%m-%d")
 		except ValueError:
-			print("Invalid date format! Should be %Y-%m-%d or <%Y-%m-%d %H:%M>")
+			print(
+				"Invalid date format! Should be %Y-%m-%d or <%Y-%m-%d %H:%M>")
 			return
 	
 	current_dt = int(datetime.timestamp(datetime.now()))
@@ -46,15 +47,15 @@ def test_weather():
 	res = w.send_request()
 	print(res[0])
 	print(res[1])
-	
-	
+
+
 def test_date():
 	# if date is not specified
 	# date = datetime.strftime(datetime.now(), "%Y-%m-%d")
 	date = "1399-12-22"
 	d = Date("shamsi", "greg", date, "روز پرستار")
 	print(d.get_occasion_date())
-	
+
 
 def main():
 	# All the time formats are in "YYYY-MM-DD HH:MM" or "YYYY-MM-DD"
@@ -63,7 +64,7 @@ def main():
 	test_weather()
 	test_rel_time()
 	test_date()
-	
+
 
 if __name__ == '__main__':
 	main()
