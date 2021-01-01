@@ -38,11 +38,11 @@ class BOT:
 		if answer["type"] == '1':
 			# HANDLED BY ARGUMENTS
 			# method = "temp"
-			answer["date"][0] = convert_date(answer["date"][0], "shamsi",
-			                                 "greg")
+			greg_date = convert_date(answer["date"][0], "shamsi",
+			                         "greg")
 			print(answer["date"][0])
 			current_dt = int(datetime.timestamp(datetime.now()))
-			w = Weather(answer["city"][0], answer["date"][0], current_dt)
+			w = Weather(answer["city"][0], greg_date, current_dt)
 			temp, cond = w.send_request()
 			
 			if method == "temp":
@@ -52,10 +52,10 @@ class BOT:
 			
 			answer["api_url"] = [w.url]
 		elif answer["type"] == '2':
-			answer["date"][0] = convert_date(answer["date"][0], "shamsi",
-			                                 "greg")
+			greg_date = convert_date(answer["date"][0], "shamsi",
+			                         "greg")
 			rl = ReligiousTime(answer["religious_time"][0], answer["city"][0],
-			                   answer["date"][0])
+			                   greg_date)
 			res = rl.get_rel_timing()
 			answer["result"] = res
 			answer["api_url"] = [rl.url]
