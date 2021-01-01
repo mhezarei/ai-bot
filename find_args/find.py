@@ -33,7 +33,7 @@ def find(sentence_temp):
 	cities = find_cities(tokens)
 	# if intent = unknown pass -1 as second arg
 	dates = find_dates(tokens_lem)
-	times = find_date_time(tokens_lem)
+	times = find_date_time(tokens_lem, sentence)
 	
 	events, dates = find_events(sentence, dates)
 	
