@@ -28,9 +28,9 @@ def find_dates(tokens_lem, intent=1):
 					fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
 				except:
 					print('error in date')
-		if intent != -1 and len(fa_dates) == 0:
-			en_datetime = dateparser.parse('امروز',
-			                               settings={'TIMEZONE': '+0330'})
-			fa_datetime = JalaliDate(en_datetime)
-			fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
+	if intent != -1 and len(fa_dates) == 0:
+		en_datetime = dateparser.parse('امروز',
+										settings={'TIMEZONE': '+0330'})
+		fa_datetime = JalaliDate(en_datetime)
+		fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
 	return fa_dates
