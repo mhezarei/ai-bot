@@ -54,6 +54,9 @@ words, combs = initialize()
 
 def score(sent: str, c: int) -> int:
 	ret = 0
+	if c == 2:
+		if ('ساعت' in sent) and ('چند است' in sent) :
+			ret += COMB_SCORE
 	for comb in combs[c]:
 		if comb in sent:
 			ret += COMB_SCORE
@@ -69,3 +72,4 @@ def rule_based_score(sent: str) -> dict:
 	for i in range(4):
 		scoring[i + 1] = score(sent, i)
 	return scoring
+

@@ -70,7 +70,7 @@ def predict(sent: str) -> int:
 	rank = (np.argpartition(rank, -2)[-2:])[::-1]
 	# +1 since the indices are 0-based but the classes are 1-based
 	first, second = rank[0] + 1, rank[1] + 1
-	
+
 	rb_score = rule_based_score(sent)
 	rb_score[unk] = 0
 	# rule-based score of the predicted classes
@@ -91,7 +91,7 @@ def predict(sent: str) -> int:
 			else:
 				return -1
 	elif first == unk and second != unk:
-		if y >= 1:
+		if y >= 2:
 			return second
 		else:
 			s = max(rb_score, key=rb_score.get)
