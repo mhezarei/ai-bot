@@ -35,7 +35,7 @@ class BOT:
 		answer = find(Question)
 		answer["type"] = str(predict(Question))
 		
-		if answer["type"] == 1:
+		if answer["type"] == '1':
 			# HANDLED BY ARGUMENTS
 			method = "temp"
 			
@@ -49,18 +49,18 @@ class BOT:
 				answer["result"] = cond
 			
 			answer["api_url"] = [w.url]
-		elif answer["type"] == 2:
+		elif answer["type"] == '2':
 			rl = ReligiousTime(answer["religious_time"][0], answer["city"][0],
 			                   answer["date"][0])
 			res = rl.get_rel_timing()
 			answer["result"] = res
 			answer["api_url"] = [rl.url]
-		elif answer["type"] == 3:
+		elif answer["type"] == '3':
 			t = Time(answer["city"][0])
 			res = t.send_request()
 			answer["result"] = res
 			answer["api_url"] = [t.url]
-		elif answer["type"] == 4:
+		elif answer["type"] == '4':
 			answer["api_url"] = ["https://www.time.ir/"]
 			
 			if answer["calender_type"] and answer["date"]:
@@ -77,6 +77,10 @@ class BOT:
 			
 			if answer["date"]:
 				answer["result"] = answer["date"][0]
+		elif answer["type"] == '-1':
+			answer = {'type': '-1', 'city': [], 'date': [],
+		          'time': [], 'religious_time': [], 'calendar_type': [],
+		          'event': [], 'api_url': [], 'result': ''}
 		
 		return answer
 	
