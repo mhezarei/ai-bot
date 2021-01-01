@@ -38,7 +38,9 @@ class BOT:
 		if answer["type"] == '1':
 			# HANDLED BY ARGUMENTS
 			# method = "temp"
-			
+			answer["date"][0] = convert_date(answer["date"][0], "shamsi",
+			                                 "greg")
+			print(answer["date"][0])
 			current_dt = int(datetime.timestamp(datetime.now()))
 			w = Weather(answer["city"][0], answer["date"][0], current_dt)
 			temp, cond = w.send_request()
@@ -50,6 +52,8 @@ class BOT:
 			
 			answer["api_url"] = [w.url]
 		elif answer["type"] == '2':
+			answer["date"][0] = convert_date(answer["date"][0], "shamsi",
+			                                 "greg")
 			rl = ReligiousTime(answer["religious_time"][0], answer["city"][0],
 			                   answer["date"][0])
 			res = rl.get_rel_timing()
@@ -79,8 +83,8 @@ class BOT:
 				answer["result"] = answer["date"][0]
 		elif answer["type"] == '-1':
 			answer = {'type': '-1', 'city': [], 'date': [],
-		          'time': [], 'religious_time': [], 'calendar_type': [],
-		          'event': [], 'api_url': [], 'result': ''}
+			          'time': [], 'religious_time': [], 'calendar_type': [],
+			          'event': [], 'api_url': [], 'result': ''}
 		
 		return answer
 	
