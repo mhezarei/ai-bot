@@ -4,7 +4,7 @@ from persiantools.jdatetime import JalaliDate
 from dateparser.calendars.jalali import JalaliCalendar
 
 
-def find_date_time(tokens_lem):
+def find_date_time(tokens_lem, sentence):
 	"""
 	Calculate time of given string by persian sentences in it and convert
 	it to HH:MM :
@@ -48,12 +48,12 @@ def find_date_time(tokens_lem):
 				numbers = re.findall(r'\d+', string)
 				raw_hour = numbers[0]
 				raw_minutes = numbers[1] if len(numbers) == 2 else '0'
-				if "بعد از ظهر" in string:
+				if "بعد از ظهر" in sentence:
 					if int(raw_hour) < 12:
 						raw_hour = str(int(raw_hour) + 12)
-				if "و نیم" in string:
+				if "و نیم" in sentence:
 					raw_minutes = '30'
-				elif "و ربع" in string:
+				elif "و ربع" in sentence:
 					raw_minutes = '15'
 				times.append(raw_hour + ':' + raw_minutes.zfill(2))
 	
