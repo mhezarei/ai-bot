@@ -67,8 +67,8 @@ class BOT:
 		elif answer["type"] == '4':
 			answer["api_url"] = ["https://www.time.ir/"]
 			
-			if answer["calender_type"] and answer["date"]:
-				target = answer["calender_type"][0]
+			if answer["calendar_type"] and answer["date"]:
+				target = answer["calendar_type"][0]
 				if target == "شمسی":
 					answer["result"] = convert_date(answer["date"][0],
 					                                "shamsi", "shamsi")
