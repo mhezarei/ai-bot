@@ -32,12 +32,12 @@ class BOT:
 		You should implement your code right here.
 		'''
 		
-		answer = find(Question)
+		answer, method = find(Question)
 		answer["type"] = str(predict(Question))
 		
 		if answer["type"] == '1':
 			# HANDLED BY ARGUMENTS
-			method = "temp"
+			# method = "temp"
 			
 			current_dt = int(datetime.timestamp(datetime.now()))
 			w = Weather(answer["city"][0], answer["date"][0], current_dt)

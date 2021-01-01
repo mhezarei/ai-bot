@@ -14,4 +14,4 @@ def pipeline_sentence(sentence):
 	nlp = pipeline("ner", model=model, tokenizer=tokenizer)
 	sentence_ner = nlp(sentence)
 	sentence_ner_lem = nlp(sentence_lem)
-	return sentence_ner, sentence_ner_lem
+	return sentence_ner, sentence_ner_lem, sentence_lem
