@@ -16,9 +16,12 @@ def find(sentence_temp):
 	religious_times = find_religious_time(sentence)
 	for religious_time in religious_times:
 		sentence = sentence.replace(religious_time, ' ')
+	if 'افق' in sentence:
+		sentence = sentence.replace('افق', ' ')
+
 	# sentence_ner, sentence_ner_lem, sentence_lem= pipeline_sentence(sentence)
 	# tokens, tokens_lem = find_tokens_in_sentence(sentence_ner,
-	                                            #  sentence_ner_lem)
+	#                                              sentence_ner_lem)
 
 	sentence_lem = "فردا هوا تهران ابر #است ؟"
 	tokens, tokens_lem = ([{'word': 'فردا', 'entity_group': 'date', 'index': 1}, {'word': 'تهران', 'entity_group': 'location', 'index': 3}], 
