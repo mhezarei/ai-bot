@@ -75,6 +75,9 @@ def predict(sent: str) -> int:
 	rb_score[unk] = 0
 	# rule-based score of the predicted classes
 	x, y = rb_score[first], rb_score[second]
+
+	if max(list(rb_score.keys())) > 50:
+		return 4
 	
 	if first != unk and second != unk:
 		if y - x >= 2:
@@ -91,7 +94,7 @@ def predict(sent: str) -> int:
 			else:
 				return -1
 	elif first == unk and second != unk:
-		if y >= 2:
+		if y >= 1:
 			return second
 		else:
 			s = max(rb_score, key=rb_score.get)

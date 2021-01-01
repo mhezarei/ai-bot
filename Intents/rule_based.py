@@ -25,22 +25,19 @@ def get_list_from(filename: str) -> list:
 		return ret
 
 
-def parse_shamsi_events(sw: list) -> Tuple[list, list]:
+def parse_shamsi_events() -> list:
+	# this is only needed for date category so we can
+	# only check the whole combination and not the words
 	events = pd.read_csv("Intents/shamsi_events.csv", encoding="utf-8")
 	temp_combs = events["event"].tolist()
-	temp_words = []
-	for c in temp_combs:
-		temp_words += [w for w in norm.normalize(c).split(' ') if w not in sw]
-	return list(temp_words), temp_combs
+	return list(set(temp_combs))
 
 
 def initialize() -> Tuple[list, list]:
-	sw = get_sw("Intents/stop_words_short.txt")
 	used_words = get_list_from("Intents/used_words.txt")
 	used_combs = get_list_from("Intents/used_combs.txt")
 	
-	w, c = parse_shamsi_events(sw)
-	used_words[3] += w
+	c = parse_shamsi_events()
 	used_combs[3] += c
 	
 	used_words = [list(set(w)) for w in used_words]
@@ -55,11 +52,14 @@ words, combs = initialize()
 def score(sent: str, c: int) -> int:
 	ret = 0
 	if c == 2:
-		if ('ساعت' in sent) and ('چند است' in sent) :
+		if ('ساعت' in sent) and ('چند است' in sent):
 			ret += COMB_SCORE
 	for comb in combs[c]:
 		if comb in sent:
-			ret += COMB_SCORE
+			if c != 3:
+				ret += COMB_SCORE
+			else:
+				ret += 50
 	for w in words[c]:
 		if w in sent.split(' '):
 			ret += WORD_SCORE
@@ -72,4 +72,3 @@ def rule_based_score(sent: str) -> dict:
 	for i in range(4):
 		scoring[i + 1] = score(sent, i)
 	return scoring
-
