@@ -10,6 +10,7 @@ from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, \
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.models import model_from_json
 
 mapping = {0: "weather",
            1: "religious time",
@@ -48,10 +49,20 @@ def train_model():
 	return model, evaluation
 
 
-model, eval_summary = train_model()
-
-
+# model, eval_summary = train_model()
+# model_json = model.to_json()
+# with open("Intents/model.json", "w") as json_file:
+#     json_file.write(model_json)
+# print(eval_summary)
+# model.save_weights("Intents/model.h5")
+# print("model saved")
 def predict(sent: str) -> int:
+	json_file = open('Intents/model.json', 'r')
+	model = json_file.read()
+	json_file.close()
+	model = model_from_json(model)
+	# load weights into new model
+	model.load_weights("Intents/model.h5")
 	unk = 5
 	enc = tokenizer.texts_to_sequences(np.array([sent]))
 	s = pad_sequences(enc, maxlen=max_len, padding='post')
