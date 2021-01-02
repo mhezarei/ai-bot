@@ -1,8 +1,8 @@
 from datetime import datetime
-from APIs.religious_time import ReligiousTime
-from APIs.time import Time
-from APIs.weather import Weather
-from APIs.date import Date
+from religious_time import ReligiousTime
+from mhr_time import Time
+from weather import Weather
+from date import Date
 
 
 def test_rel_time():

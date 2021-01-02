@@ -1,6 +1,6 @@
 import json
 import requests
-from APIs.utility import *
+from utility import *
 
 
 class Weather:

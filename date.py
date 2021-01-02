@@ -1,4 +1,4 @@
-from APIs.utility import *
+from utility import *
 
 
 class Date:

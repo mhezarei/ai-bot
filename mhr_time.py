@@ -1,7 +1,7 @@
 from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
-from APIs.utility import get_english_names
+from utility import get_english_names
 
 
 class Time:

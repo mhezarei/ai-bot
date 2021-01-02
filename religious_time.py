@@ -1,5 +1,5 @@
 import requests
-from APIs.utility import get_english_names, split_date
+from utility import get_english_names, split_date
 
 REL_TIME_CONVERSION = {
 	"امساک": "Imsak",

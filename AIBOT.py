@@ -1,11 +1,11 @@
 from datetime import datetime
 from find import find
 from learning import predict
-from APIs.weather import Weather
-from APIs.religious_time import ReligiousTime
-from APIs.time import Time
-from APIs.date import Date
-from APIs.utility import convert_date
+from weather import Weather
+from religious_time import ReligiousTime
+from mhr_time import Time
+from date import Date
+from utility import convert_date
 
 
 class BOT:
