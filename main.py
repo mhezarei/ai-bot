@@ -1,4 +1,4 @@
-from AIBOT import BOT
+from aibot import BOT
 
 
 def main():
