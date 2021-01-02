@@ -3,7 +3,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import numpy as np
 import pandas as pd
-from Intents.rule_based import rule_based_score
+from rule_based import rule_based_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, \
 	Dense
@@ -18,7 +18,7 @@ mapping = {0: "weather",
            3: "date",
            4: "unknown"}
 
-df = pd.read_csv("Intents/mh_clean.csv", index_col=0)
+df = pd.read_csv("mh_clean.csv", index_col=0)
 df_x = df["sentence"].values
 df_y = df["class"].values
 x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.25,
@@ -51,18 +51,18 @@ def train_model():
 
 # model, eval_summary = train_model()
 # model_json = model.to_json()
-# with open("Intents/model.json", "w") as json_file:
+# with open("model.json", "w") as json_file:
 #     json_file.write(model_json)
 # print(eval_summary)
-# model.save_weights("Intents/model.h5")
+# model.save_weights("model.h5")
 # print("model saved")
 def predict(sent: str) -> int:
-	json_file = open('Intents/model.json', 'r')
+	json_file = open('model.json', 'r')
 	model = json_file.read()
 	json_file.close()
 	model = model_from_json(model)
 	# load weights into new model
-	model.load_weights("Intents/model.h5")
+	model.load_weights("model.h5")
 	unk = 5
 	enc = tokenizer.texts_to_sequences(np.array([sent]))
 	s = pad_sequences(enc, maxlen=max_len, padding='post')

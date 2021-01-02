@@ -28,14 +28,14 @@ def get_list_from(filename: str) -> list:
 def parse_shamsi_events() -> list:
 	# this is only needed for date category so we can
 	# only check the whole combination and not the words
-	events = pd.read_csv("Intents/shamsi_events.csv", encoding="utf-8")
+	events = pd.read_csv("shamsi_events.csv", encoding="utf-8")
 	temp_combs = events["event"].tolist()
 	return list(set(temp_combs))
 
 
 def initialize() -> Tuple[list, list]:
-	used_words = get_list_from("Intents/used_words.txt")
-	used_combs = get_list_from("Intents/used_combs.txt")
+	used_words = get_list_from("used_words.txt")
+	used_combs = get_list_from("used_combs.txt")
 	
 	c = parse_shamsi_events()
 	used_combs[3] += c

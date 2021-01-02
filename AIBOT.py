@@ -1,6 +1,6 @@
 from datetime import datetime
 from find_args.find import find
-from Intents.learning import predict
+from learning import predict
 from APIs.weather import Weather
 from APIs.religious_time import ReligiousTime
 from APIs.time import Time

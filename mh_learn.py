@@ -6,7 +6,7 @@
 
 import numpy as np
 import pandas as pd
-from Intents.rule_based import rule_based_score
+from rule_based import rule_based_score
 
 # In[37]:
 
