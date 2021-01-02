@@ -4,6 +4,7 @@ from hazm import word_tokenize, Lemmatizer, Normalizer
 
 
 def pipeline_sentence(sentence):
+	# /var/www/AIBot/media/bert-base-parsbert-ner-uncased
 	tokenizer = AutoTokenizer.from_pretrained("Model/")
 	model = AutoModelForTokenClassification.from_pretrained("Model/")
 	
