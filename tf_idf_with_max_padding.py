@@ -1,10 +1,14 @@
 import pandas as pd
+import os
 from hazm import *
 from itertools import groupby
 import math
 
-answers_clean = pd.read_csv('answers_clean.csv', index_col=0)
-text_file = open("stop_words_short.txt",
+p = os.path.dirname(os.path.abspath(__file__))
+f = os.path.join(p, "answers_clean.csv")
+answers_clean = pd.read_csv(p, index_col=0)
+f = os.path.join(p, "stop_words_short.txt")
+text_file = open(f,
                  encoding="utf8")  # I'm not really sure about removing stop words
 stop_words = text_file.read().split("\n")
 
@@ -89,7 +93,9 @@ def main():
 	assert (len(vectors) == len(all_tokens))
 	padded = max_padding(vectors, max_tokens_per_line)
 	df = pd.DataFrame(padded)
-	df.to_csv("tf_idf_padded.csv")
+	p = os.path.dirname(os.path.abspath(__file__))
+	f = os.path.join(p, "tf_idf_padded.csv")
+	df.to_csv(f)
 
 
 if __name__ == '__main__':

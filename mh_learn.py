@@ -3,7 +3,7 @@
 
 # In[36]:
 
-
+import os
 import numpy as np
 import pandas as pd
 from rule_based import rule_based_score
@@ -19,8 +19,9 @@ mapping = {0: "weather",
 
 # In[38]:
 
-
-df = pd.read_csv("mh_clean.csv", index_col=0)
+p = os.path.dirname(os.path.abspath(__file__))
+f = os.path.join(p, "mh_clean.csv")
+df = pd.read_csv(f, index_col=0)
 df
 
 # In[39]:

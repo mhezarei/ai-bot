@@ -9,6 +9,7 @@ norm = Normalizer()
 COMB_SCORE = 3
 WORD_SCORE = 1
 
+p = os.path.dirname(os.path.abspath(__file__))
 
 def get_sw(filename: str) -> list:
 	with open(filename, encoding="utf-8") as f:
@@ -28,14 +29,15 @@ def get_list_from(filename: str) -> list:
 def parse_shamsi_events() -> list:
 	# this is only needed for date category so we can
 	# only check the whole combination and not the words
-	events = pd.read_csv("shamsi_events.csv", encoding="utf-8")
+	f = os.path.join(p, 'shamsi_events.csv')
+	events = pd.read_csv(f, encoding="utf-8")
 	temp_combs = events["event"].tolist()
 	return list(set(temp_combs))
 
 
 def initialize() -> Tuple[list, list]:
-	used_words = get_list_from("used_words.txt")
-	used_combs = get_list_from("used_combs.txt")
+	used_words = get_list_from(os.path.join(p, 'used_words.txt'))
+	used_combs = get_list_from(os.path.join(p, 'used_combs.txt'))
 	
 	c = parse_shamsi_events()
 	used_combs[3] += c

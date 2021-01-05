@@ -18,7 +18,11 @@ mapping = {0: "weather",
            3: "date",
            4: "unknown"}
 
-df = pd.read_csv("mh_clean.csv", index_col=0)
+
+p = os.path.dirname(os.path.abspath(__file__))
+f = os.path.join(p, "mh_clean.csv")
+
+df = pd.read_csv(f, index_col=0)
 df_x = df["sentence"].values
 df_y = df["class"].values
 x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.25,
@@ -57,12 +61,15 @@ def train_model():
 # model.save_weights("model.h5")
 # print("model saved")
 def predict(sent: str) -> int:
-	json_file = open('model.json', 'r')
+	p = os.path.dirname(os.path.abspath(__file__))
+	f = os.path.join(p, "model.json")
+	json_file = open(f, 'r')
 	model = json_file.read()
 	json_file.close()
 	model = model_from_json(model)
 	# load weights into new model
-	model.load_weights("model.h5")
+	f = os.path.join(p, "model.h5")
+	model.load_weights(f)
 	unk = 5
 	enc = tokenizer.texts_to_sequences(np.array([sent]))
 	s = pad_sequences(enc, maxlen=max_len, padding='post')

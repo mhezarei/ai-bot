@@ -1,4 +1,5 @@
 from utility import *
+import os
 
 
 class Date:
@@ -11,7 +12,9 @@ class Date:
 		self.occasion = occasion
 	
 	def get_occasion_date(self):
-		df = pd.read_csv("../Intents/shamsi_events.csv", encoding="utf-8")
+		p = os.path.dirname(os.path.abspath(__file__))
+		f = os.path.join(p, "shamsi_events.csv")
+		df = pd.read_csv(f, encoding="utf-8")
 		temp = df[df["event"].str.contains(self.occasion)]
 		shamsi_date = convert_date(self.date, self.base, "shamsi")
 		y, m, d = map(int, split_date(shamsi_date))
