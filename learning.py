@@ -46,7 +46,8 @@ def train_model():
 	model.add(MaxPooling1D(pool_size=2))
 	model.add(Flatten())
 	model.add(BatchNormalization())
-	model.add(Dense(16, activation='relu'))
+	# model.add(Dense(32, activation='relu'))
+	model.add(Dense(16, activation='sigmoid'))
 	model.add(Dense(8, activation='sigmoid'))
 	model.compile(loss='sparse_categorical_crossentropy', optimizer='adam',
 	              metrics=['accuracy'])
@@ -63,6 +64,7 @@ with open("model.json", "w") as json_file:
 print(eval_summary)
 model.save_weights("model.h5")
 print("model saved")
+
 def predict(sent: str) -> int:
 	p = os.path.dirname(os.path.abspath(__file__))
 	f = os.path.join(p, "model.json")
