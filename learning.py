@@ -6,7 +6,7 @@ import pandas as pd
 from rule_based import rule_based_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, \
-	Dense
+	Dense, BatchNormalization
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -40,11 +40,14 @@ vocab_size = len(tokenizer.word_index) + 1
 def train_model():
 	model = Sequential()
 	model.add(Embedding(vocab_size, 100, input_length=max_len))
-	model.add(Conv1D(filters=32, kernel_size=16, activation='relu'))
+	model.add(Conv1D(filters=32,
+					 kernel_size=16,
+					 activation='relu'))
 	model.add(MaxPooling1D(pool_size=2))
 	model.add(Flatten())
-	model.add(Dense(10, activation='relu'))
-	model.add(Dense(5, activation='sigmoid'))
+	model.add(BatchNormalization())
+	model.add(Dense(16, activation='relu'))
+	model.add(Dense(8, activation='sigmoid'))
 	model.compile(loss='sparse_categorical_crossentropy', optimizer='adam',
 	              metrics=['accuracy'])
 	model.fit(x_train, y_train, epochs=15, verbose=0)
