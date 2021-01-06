@@ -13,10 +13,16 @@ from find_weather import find_weather_method
 
 def find(sentence_temp):
 	sentence = sentence_temp
-	calender_types = find_calendar_types(sentence)
-	religious_times = find_religious_time(sentence)
-	for religious_time in religious_times:
-		sentence = sentence.replace(religious_time, ' ')
+	try:
+		calender_types = find_calendar_types(sentence)
+	except Exception:
+		calender_types = []
+	try:
+		religious_times = find_religious_time(sentence)
+	except Exception:
+		religious_times = []
+		for religious_time in religious_times:
+			sentence = sentence.replace(religious_time, ' ')
 	if 'افق' in sentence:
 		sentence = sentence.replace('افق', ' ')
 
@@ -31,15 +37,34 @@ def find(sentence_temp):
 	# 	[{'entity_group': 'organization', 'index': 3, 'word': 'جمهوری اسلامی'},
 	# 	 {'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}],
 	# 	[{'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}])
-	
-	method = find_weather_method(sentence_lem)
 
-	cities = find_cities(tokens)
+	try:
+		method = find_weather_method(sentence_lem)
+	except Exception:
+		method = 'cond'
+
+	try:
+		cities = find_cities(tokens)
+	except Exception:
+		# raise ValueError("find_cities Error!")
+		cities = []
 	# if intent = unknown pass -1 as second arg
-	dates = find_dates(tokens_lem)
-	times = find_date_time(tokens_lem, sentence)
+	try:
+		dates = find_dates(tokens_lem)
+	except Exception:
+		# raise ValueError("find_dates Error!")
+		dates = []
+	try:
+		times = find_date_time(tokens_lem, sentence)
+	except Exception:
+		# raise ValueError("find_times Error!")
+		times = []
 	
-	events, dates = find_events(sentence, dates)
+	try:
+		events, dates = find_events(sentence, dates)
+	except Exception:
+		# raise ValueError("find_events_dates Error!")
+		events, dates = [], []
 	
 	answer = {'type': '', 'city': cities, 'date': dates, 'time': times,
 	          'religious_time': religious_times,

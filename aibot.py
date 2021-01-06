@@ -33,7 +33,10 @@ class BOT:
 		'''
 		
 		answer, method = find(Question)
-		answer["type"] = str(predict(Question))
+		try:
+			answer["type"] = str(predict(Question))
+		except Exception:
+			raise ValueError("Type Predict Error!")
 		
 		if answer["type"] == '1':
 			# HANDLED BY ARGUMENTS
@@ -41,46 +44,61 @@ class BOT:
 			greg_date = convert_date(answer["date"][0], "shamsi",
 			                         "greg")
 			print(answer["date"][0])
-			current_dt = int(datetime.timestamp(datetime.now()))
-			w = Weather(answer["city"][0], greg_date, current_dt)
-			temp, cond = w.send_request()
+			try:
+				current_dt = int(datetime.timestamp(datetime.now()))
+				w = Weather(answer["city"][0], greg_date, current_dt)
+				temp, cond = w.send_request()
+				if method == "temp":
+					answer["result"] = temp
+				elif method == "cond":
+					answer["result"] = cond
+				answer["api_url"] = [w.url]
+			except Exception:
+				# raise ValueError("Type 1 Error!")
+				pass
 			
-			if method == "temp":
-				answer["result"] = temp
-			elif method == "cond":
-				answer["result"] = cond
-			
-			answer["api_url"] = [w.url]
 		elif answer["type"] == '2':
-			greg_date = convert_date(answer["date"][0], "shamsi",
-			                         "greg")
-			rl = ReligiousTime(answer["religious_time"][0], answer["city"][0],
-			                   greg_date)
-			res = rl.get_rel_timing()
-			answer["result"] = res
-			answer["api_url"] = [rl.url]
+			try:
+				greg_date = convert_date(answer["date"][0], "shamsi",
+										"greg")
+				rl = ReligiousTime(answer["religious_time"][0], answer["city"][0],
+								greg_date)
+				res = rl.get_rel_timing()
+				answer["result"] = res
+				answer["api_url"] = [rl.url]
+			except Exception:
+				# raise ValueError("Type 2 Error!")
+				pass
 		elif answer["type"] == '3':
-			t = Time(answer["city"][0])
-			res = t.send_request()
-			answer["result"] = res
-			answer["api_url"] = [t.url]
+			try:
+				t = Time(answer["city"][0])
+				res = t.send_request()
+				answer["result"] = res
+				answer["api_url"] = [t.url]
+			except Exception:
+				# raise ValueError("Type 3 Error!")
+				pass
 		elif answer["type"] == '4':
-			answer["api_url"] = ["https://www.time.ir/"]
-			
-			if answer["calendar_type"] and answer["date"]:
-				target = answer["calendar_type"][0]
-				if target == "شمسی":
-					answer["result"] = convert_date(answer["date"][0],
-					                                "shamsi", "shamsi")
-				elif target == "قمری":
-					answer["result"] = convert_date(answer["date"][0],
-					                                "shamsi", "hijri")
-				elif target == "میلادی":
-					answer["result"] = convert_date(answer["date"][0],
-					                                "shamsi", "greg")
-			
-			if answer["date"]:
-				answer["result"] = answer["date"][0]
+			try:
+				answer["api_url"] = ["https://www.time.ir/"]
+				
+				if answer["calendar_type"] and answer["date"]:
+					target = answer["calendar_type"][0]
+					if target == "شمسی":
+						answer["result"] = convert_date(answer["date"][0],
+														"shamsi", "shamsi")
+					elif target == "قمری":
+						answer["result"] = convert_date(answer["date"][0],
+														"shamsi", "hijri")
+					elif target == "میلادی":
+						answer["result"] = convert_date(answer["date"][0],
+														"shamsi", "greg")
+				
+				if answer["date"]:
+					answer["result"] = answer["date"][0]
+			except Exception:
+				# raise ValueError("Type 4 Error!")
+				pass
 		elif answer["type"] == '-1':
 			answer = {'type': '-1', 'city': [], 'date': [],
 			          'time': [], 'religious_time': [], 'calendar_type': [],

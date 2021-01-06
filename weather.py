@@ -15,12 +15,12 @@ class Weather:
 		self.url = ""
 	
 	def send_request(self) -> Tuple[str, str]:
-		if self.current_dt - self.dt >= 5 * 24 * 3600:
-			raise ValueError(
-				"The requested past time must be within the last 5 days!")
-		elif self.dt - self.current_dt >= 7 * 24 * 3600:
-			raise ValueError(
-				"The requested future time must be within the next 7 days!")
+		# if self.current_dt - self.dt >= 5 * 24 * 3600:
+		# 	raise ValueError(
+		# 		"The requested past time must be within the last 5 days!")
+		# elif self.dt - self.current_dt >= 7 * 24 * 3600:
+		# 	raise ValueError(
+		# 		"The requested future time must be within the next 7 days!")
 		
 		if self.dt < self.current_dt:
 			url = self.history_url + '&'.join(
