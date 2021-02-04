@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from find_cities import find_cities
-from find_dates import find_dates
+from find_dates import find_dates, find_dates_replace
 from find_events import find_events
 from find_religious_time import find_religious_time
 from find_time import find_date_time
@@ -50,7 +50,7 @@ def find(sentence_temp):
 		cities = []
 	# if intent = unknown pass -1 as second arg
 	try:
-		dates = find_dates(tokens_lem)
+		dates = find_dates(sentence_lem)
 	except Exception:
 		# raise ValueError("find_dates Error!")
 		dates = []
