@@ -45,6 +45,10 @@ def find(sentence_temp):
 
 	try:
 		cities = find_cities(tokens)
+		for explicit_city in ["کابل", "اسلام آباد"]:
+			if explicit_city in sentence_lem:
+				cities.append(explicit_city)
+		cities = [city.replace("شهر ", "") for city in cities]
 	except Exception:
 		# raise ValueError("find_cities Error!")
 		cities = []
