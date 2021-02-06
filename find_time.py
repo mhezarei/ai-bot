@@ -2,6 +2,7 @@ import re
 import dateparser
 from persiantools.jdatetime import JalaliDate
 from dateparser.calendars.jalali import JalaliCalendar
+from unidecode import unidecode
 
 
 def find_date_time(tokens_lem, sentence):
@@ -57,4 +58,6 @@ def find_date_time(tokens_lem, sentence):
 					raw_minutes = '15'
 				times.append(raw_hour + ':' + raw_minutes.zfill(2))
 	
+	times = [unidecode(time) for time in times]
+
 	return times
