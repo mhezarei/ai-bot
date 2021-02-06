@@ -56,7 +56,7 @@ def find_date_time(tokens_lem, sentence):
 					raw_minutes = '30'
 				elif "و ربع" in sentence:
 					raw_minutes = '15'
-				times.append(raw_hour + ':' + raw_minutes.zfill(2))
+				times.append(raw_hour.zfill(2) + ':' + raw_minutes.zfill(2))
 	
 	times = [unidecode(time) for time in times]
 
