@@ -75,6 +75,8 @@ class BOT:
 				res = t.send_request()
 				answer["result"] = res
 				answer["api_url"] = [t.url]
+				answer["date"] = []
+				answer["time"] = []
 			except Exception:
 				# raise ValueError("Type 3 Error!")
 				pass
