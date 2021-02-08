@@ -27,7 +27,7 @@ def find_dates(sentence_lem):
                                        settings={'TIMEZONE': '+0330'})
         fa_datetime = JalaliDate(en_datetime)
         fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
-        print("dates : " + str(fa_dates))
+    print("dates : " + str(fa_dates))
     return fa_dates
 
 

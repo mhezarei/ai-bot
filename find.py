@@ -9,69 +9,70 @@ from tokens_in_sentence import find_tokens_in_sentence
 from find_calendar_types import find_calendar_types
 from find_weather import find_weather_method
 
+
 # If you don't have model -> Comment 7, 8, 23, 24 lines and Uncomment 27, 28, 29 lines
 
 def find(sentence_temp):
-	sentence = sentence_temp
-	try:
-		calender_types = find_calendar_types(sentence)
-	except Exception:
-		calender_types = []
-	try:
-		religious_times = find_religious_time(sentence)
-	except Exception:
-		religious_times = []
-		for religious_time in religious_times:
-			sentence = sentence.replace(religious_time, ' ')
-	if 'افق' in sentence:
-		sentence = sentence.replace('افق', ' ')
+    sentence = sentence_temp
+    try:
+        calender_types = find_calendar_types(sentence)
+    except Exception:
+        calender_types = []
+    try:
+        religious_times = find_religious_time(sentence)
+    except Exception:
+        religious_times = []
+    for religious_time in religious_times:
+        sentence = sentence.replace(religious_time, ' ')
+    if 'افق' in sentence:
+        sentence = sentence.replace('افق', ' ')
 
-	sentence_ner, sentence_ner_lem, sentence_lem= pipeline_sentence(sentence)
-	tokens, tokens_lem = find_tokens_in_sentence(sentence_ner,
-	                                             sentence_ner_lem)
+    sentence_ner, sentence_ner_lem, sentence_lem, sentence = pipeline_sentence(sentence)
+    tokens, tokens_lem = find_tokens_in_sentence(sentence_ner,
+                                                 sentence_ner_lem)
 
-	# sentence_lem = "فردا هوا تهران ابر #است ؟"
-	# tokens, tokens_lem = ([{'word': 'فردا', 'entity_group': 'date', 'index': 1}, {'word': 'تهران', 'entity_group': 'location', 'index': 3}], 
-	# 				[{'word': 'فردا', 'entity_group': 'date', 'index': 1}, {'word': 'تهران', 'entity_group': 'location', 'index': 3}])
-	# tokens, tokens_lem = (
-	# 	[{'entity_group': 'organization', 'index': 3, 'word': 'جمهوری اسلامی'},
-	# 	 {'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}],
-	# 	[{'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}])
+    # sentence_lem = "فردا هوا تهران ابر #است ؟"
+    # tokens, tokens_lem = ([{'word': 'فردا', 'entity_group': 'date', 'index': 1}, {'word': 'تهران', 'entity_group': 'location', 'index': 3}],
+    # 				[{'word': 'فردا', 'entity_group': 'date', 'index': 1}, {'word': 'تهران', 'entity_group': 'location', 'index': 3}])
+    # tokens, tokens_lem = (
+    # 	[{'entity_group': 'organization', 'index': 3, 'word': 'جمهوری اسلامی'},
+    # 	 {'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}],
+    # 	[{'entity_group': 'date', 'index': 6, 'word': 'سال ۱۴۰۰'}])
 
-	try:
-		method = find_weather_method(sentence_lem)
-	except Exception:
-		method = 'cond'
+    try:
+        method = find_weather_method(sentence_lem)
+    except Exception:
+        method = 'cond'
 
-	try:
-		cities = find_cities(tokens)
-		for explicit_city in ["کابل", "اسلام آباد"]:
-			if explicit_city in sentence_lem:
-				cities.append(explicit_city)
-		cities = [city.replace("شهر ", "") for city in cities]
-	except Exception:
-		# raise ValueError("find_cities Error!")
-		cities = []
-	# if intent = unknown pass -1 as second arg
-	try:
-		dates = find_dates(sentence_lem)
-	except Exception:
-		# raise ValueError("find_dates Error!")
-		dates = []
-	try:
-		times = find_date_time(tokens_lem, sentence)
-	except Exception:
-		# raise ValueError("find_times Error!")
-		times = []
-	
-	try:
-		events, dates = find_events(sentence, dates)
-	except Exception:
-		# raise ValueError("find_events_dates Error!")
-		events, dates = [], []
-	
-	answer = {'type': '', 'city': cities, 'date': dates, 'time': times,
-	          'religious_time': religious_times,
-	          'calendar_type': calender_types,
-	          'event': events, 'api_url': [], 'result': ''}
-	return answer, method
+    try:
+        cities = find_cities(tokens, sentence)
+        for explicit_city in ["کابل", "اسلام آباد"]:
+            if explicit_city in sentence_lem:
+                cities.append(explicit_city)
+        cities = [city.replace("شهر ", "") for city in cities]
+    except Exception:
+        # raise ValueError("find_cities Error!")
+        cities = []
+    # if intent = unknown pass -1 as second arg
+    try:
+        dates = find_dates(sentence_lem)
+    except Exception:
+        # raise ValueError("find_dates Error!")
+        dates = []
+    try:
+        times = find_date_time(tokens_lem, sentence)
+    except Exception:
+        # raise ValueError("find_times Error!")
+        times = []
+
+    try:
+        events, dates = find_events(sentence, dates)
+    except Exception:
+        # raise ValueError("find_events_dates Error!")
+        events, dates = [], []
+
+    answer = {'type': '', 'city': cities, 'date': dates, 'time': times,
+              'religious_time': religious_times,
+              'calendar_type': calender_types,
+              'event': events, 'api_url': [], 'result': ''}
+    return answer, method
