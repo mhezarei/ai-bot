@@ -2,6 +2,7 @@ from persiantools.jdatetime import JalaliDate
 from dateparser.calendars.jalali import JalaliCalendar
 import dateparser
 import re
+import jdatetime
 
 
 def find_dates(sentence_lem):
@@ -29,6 +30,23 @@ def find_dates(sentence_lem):
         fa_datetime = JalaliDate(en_datetime)
         fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
     print("dates : " + str(fa_dates))
+
+    # find dates like "18 اسفند"
+    dates = [x.group() for x in re.finditer(r"\d+[\s][\u0600-\u06FF]+", sentence)]
+    for i in range(len(dates)):
+        for per_month in ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'ابان', 'اذر', 'دی', 'بهمن', 'اسفند']:
+            if per_month in dates[i]:
+                en_datetime = JalaliCalendar(dates[i]).get_date()
+                fa_datetime = JalaliDate(en_datetime.date_obj)
+                temp = fa_datetime.strftime('%Y-%m-%d')
+
+                year = fa_dates[i].split("-")[0]
+                month = temp.split("-")[1]
+                day = temp.split("-")[2]
+
+                fa_dates[i] = f"{year}-{month}-{day}"
+                print(fa_dates)
+
     return fa_dates
 
 
