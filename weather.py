@@ -10,7 +10,7 @@ class Weather:
 		self.dt = parse_datetime(dt)
 		self.current_dt = current_dt
 		self.current_url = "api.openweathermap.org/data/2.5/weather?appid=345d8217035c76f9bd352963c9f009a7&"
-		self.forecast_url = "https://api.openweathermap.org/data/2.5/onecall?appid=345d8217035c76f9bd352963c9f009a7&units=metrics&exclude=alerts,minutely&"
+		self.forecast_url = "https://api.openweathermap.org/data/2.5/onecall?appid=345d8217035c76f9bd352963c9f009a7&units=metric&exclude=alerts,minutely&"
 		self.history_url = "https://api.openweathermap.org/data/2.5/onecall/timemachine?appid=345d8217035c76f9bd352963c9f009a7&units=metric&"
 		self.url = ""
 	
