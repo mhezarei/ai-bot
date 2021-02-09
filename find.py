@@ -66,7 +66,7 @@ def find(sentence_temp):
         times = []
 
     try:
-        events, dates = find_events(sentence, dates)
+        events, dates = find_events(sentence_temp, dates)
     except Exception:
         # raise ValueError("find_events_dates Error!")
         events, dates = [], []
