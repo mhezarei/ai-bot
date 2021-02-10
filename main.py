@@ -3,7 +3,7 @@ from aibot import BOT
 
 def main():
     my_bot = BOT()
-    sentence = 'امسال جشن سده در کدام روز است؟    '
+    sentence = 'دمای هوای امروز شیراز ساعت ۱۴:۲۵ چقدر است؟   '
     answer = my_bot.AIBOT(sentence)
     print(answer)
 

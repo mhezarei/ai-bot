@@ -23,12 +23,14 @@ class ReligiousTime:
 		self.year, self.month, self.day = split_date(date)
 		self.base_url = "http://api.aladhan.com/v1/calendarByCity"
 		self.url = ""
+
 	
 	def send_request(self) -> dict:
 		# Gives us the religious timings
 		url = self.base_url + '?'
 		temp = self.__dict__.copy()
 		temp.pop("rel_time")
+		temp.pop("base_url")
 		url += '&'.join([f"{i[0]}={i[1]}" for i in temp.items()])
 		self.url = url
 		resp = requests.get(url)
