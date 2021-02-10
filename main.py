@@ -3,7 +3,7 @@ from aibot import BOT
 
 def main():
     my_bot = BOT()
-    sentence = "مناسبت روز 18 اسفند امسال و 12 مهر سال بعد چیست؟"
+    sentence = 'امسال جشن سده در کدام روز است؟    '
     answer = my_bot.AIBOT(sentence)
     print(answer)
 
