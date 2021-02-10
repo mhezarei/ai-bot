@@ -12,9 +12,9 @@ def find_events(sentence, dates):
 	events = []
 	for i in range(len(important_events)):
 		if important_events_key[i] in sentence:
-			events.append(important_events_key[i])
+			events.append(important_events[i])
 		elif important_events[i] in sentence:
-			events.append(important_events_key[i])
+			events.append(important_events[i])
 	new_dates = []
 	if len(events) > 0 and len(dates) > 0:
 		year = dates[0].split('-')[0]
