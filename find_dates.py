@@ -1,5 +1,6 @@
 from persiantools.jdatetime import JalaliDate
 from dateparser.calendars.jalali import JalaliCalendar
+from unidecode import unidecode
 import dateparser
 import re
 import jdatetime
@@ -45,7 +46,22 @@ def find_dates(sentence_lem):
                 day = temp.split("-")[2]
 
                 fa_dates[i] = f"{year}-{month}-{day}"
-                print(fa_dates)
+
+    # find dates like "سال 99", "سال 1399"
+    dates = [x.group() for x in re.finditer(r"[سال|روز][\s]\d+", sentence)]
+    for i in range(len(dates)):
+
+        year = dates[i].split(" ")[1]
+
+        if len(year) == 2:
+            year = '13' + year
+
+        year = unidecode(year)
+
+        month = fa_dates[i].split("-")[1]
+        day = fa_dates[i].split("-")[2]
+
+        fa_dates[i] = f"{year}-{month}-{day}"
 
     return fa_dates
 
@@ -91,6 +107,11 @@ def find_dates_replace(sentence):
 
     sentence = sentence.replace("پس فردا", "2 روز بعد")
     sentence = sentence.replace("پریروز", "2 روز پیش")
+
+    if not re.findall(r"([\u0660-\u0669]|[\d])+[\s]سال[\s]بعد", sentence):
+        sentence = sentence.replace("سال بعد", "1 سال بعد")
+    if not re.findall(r"([\u0660-\u0669]|[\d])+[\s]سال[\s]پیش", sentence):
+        sentence = sentence.replace("سال پیش", "1 سال پیش")
 
     if not re.findall(r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]بعد", sentence):
         sentence = sentence.replace("هفته بعد", "1 هفته بعد")

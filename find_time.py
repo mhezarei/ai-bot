@@ -37,11 +37,11 @@ def find_date_time(tokens_lem, sentence):
             string = string.replace("یازده", "11")
             string = string.replace("دوازده", "12")
             # Converting to HH:MM format
-            numbers = re.findall(r'\d+', string)
+            numbers = [x.group() for x in re.finditer(r'([\u0660-\u0669]|[\d])+', string)]
             raw_hour = numbers[0]
             raw_minutes = numbers[1] if len(numbers) == 2 else '0'
 
-            if "بعد از ظهر" in string or "عصر" in string:
+            if "بعد از ظهر" in string or "عصر" in string or "شب" in string:
                 if int(raw_hour) < 12:
                     raw_hour = str(int(raw_hour) + 12)
             if "بامداد" in string or "صبح" in string:
