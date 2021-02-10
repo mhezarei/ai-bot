@@ -7,6 +7,8 @@ from mhr_time import Time
 from date import Date
 from utility import convert_date
 
+from deepmine import Deepmine
+from aryana import aryana
 
 class BOT:
     def __init__(self):
@@ -109,20 +111,32 @@ class BOT:
         return answer
 
     '''
-    This method takes an string as input, the string contains the address of a wav file.
-    You can either use your own speech recognition or nevisa to extract the question from that file.
-    Also you should call ariana to create an audio file as output.
+    This method takes an string as input, the string contains the address of .wav file.
     
-    :Param Address : an string containing the the address of a wav file.
+    :Param Address : an string containing the path of .wav file.
 
     : return : A dictionary containing the type of question, corresponding arguments, api_url and result.
+    Also you should return your generated sentences as data stream. which mean what aryana returns.
     '''
 
-    def AIBOT_Modified(self, Address):
-        answer = {'type': '0', 'city': [], 'date': [],
-                  'time': [], 'religous_time': [], 'calendar_type': [],
-                  'event': [], 'api_url': '', 'result': ''}
+    def aibot(self, Address):
+        answer = {'type': [], 'city': [], 'date': [],
+                  'time': [], 'religious_time': [], 'calendar_type': [], 'event': [], 'api_url': [''], 'result': []}
         '''
         You should implement your code right here.
         '''
-        return answer
+
+        #Create instance Deepmine()
+        m = Deepmine()
+        # get text of your file! return status,text: if status==0 error occured.
+        status,text = m.get_text(Address)
+        
+        answer = self.AIBOT(text)
+
+        generated_sentence = "این یک جمله‌ای صرفا برای امتحان کردن است"
+        response = aryana(generated_sentence)
+
+        with open("response.wav", mode='bw') as f:
+            f.write(response.content)
+
+        return answer, response

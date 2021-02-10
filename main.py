@@ -3,8 +3,12 @@ from aibot import BOT
 
 def main():
     my_bot = BOT()
-    sentence = 'دمای هوای امروز شیراز ساعت ۱۴:۲۵ چقدر است؟   '
-    answer = my_bot.AIBOT(sentence)
+
+    # sentence = 'دمای هوای امروز شیراز ساعت ۱۴:۲۵ چقدر است؟   '
+    # answer = my_bot.AIBOT(sentence)
+
+    answer = my_bot.aibot('input.wav')
+    
     print(answer)
 
 
