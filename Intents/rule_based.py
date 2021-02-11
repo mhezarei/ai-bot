@@ -72,3 +72,4 @@ def rule_based_score(sent: str) -> dict:
 	for i in range(4):
 		scoring[i + 1] = score(sent, i)
 	return scoring
+

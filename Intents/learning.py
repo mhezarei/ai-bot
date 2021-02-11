@@ -1,16 +1,18 @@
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import numpy as np
 import pandas as pd
-from Intents.rule_based import rule_based_score
+from rule_based import rule_based_score
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, \
-	Dense
+from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, LSTM
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.models import model_from_json
+from sklearn.metrics import confusion_matrix, accuracy_score
 
 mapping = {0: "weather",
            1: "religious time",
@@ -18,9 +20,12 @@ mapping = {0: "weather",
            3: "date",
            4: "unknown"}
 
-df = pd.read_csv("Intents/mh_clean.csv", index_col=0)
-df_x = df["sentence"].values
-df_y = df["class"].values
+df = pd.read_csv("Intents/questions and data.csv", index_col=0)
+df_x = df["questions"].values
+df_y = df["class0"].values
+# df = pd.read_csv("mh_clean.csv")
+# df_x = df['sentence'].values
+# df_y = df['class'].values
 x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.25,
                                                     random_state=42)
 tokenizer = Tokenizer()
@@ -36,49 +41,47 @@ vocab_size = len(tokenizer.word_index) + 1
 def train_model():
 	model = Sequential()
 	model.add(Embedding(vocab_size, 100, input_length=max_len))
-	model.add(Conv1D(filters=32, kernel_size=16, activation='relu'))
-	model.add(MaxPooling1D(pool_size=2))
-	model.add(Flatten())
-	model.add(Dense(10, activation='relu'))
+	model.add(LSTM(150))
 	model.add(Dense(5, activation='sigmoid'))
 	model.compile(loss='sparse_categorical_crossentropy', optimizer='adam',
-	              metrics=['accuracy'])
-	model.fit(x_train, y_train, epochs=15, verbose=0)
-	evaluation = model.evaluate(x_test, y_test, verbose=0)
-	
+				  metrics=['accuracy'])
+	model.fit(x_train, y_train, epochs=15, verbose=1)
+	evaluation = model.evaluate(x_test, y_test, verbose=1)
+
 	return model, evaluation
 
-
 # model, eval_summary = train_model()
-# model_json = model.to_json()
-# with open("Intents/model.json", "w") as json_file:
-#     json_file.write(model_json)
 # print(eval_summary)
-# model.save_weights("Intents/model.h5")
-# print("model saved")
+# model_json = model.to_json()
+# with open("Intents/all_lstm_model.json", "w") as json_file:
+#     json_file.write(model_json)
+# model.save_weights("Intents/all_lstm_model_weights.h5")
+# print("Saved model to disk")
+
 def predict(sent: str) -> int:
-	json_file = open('Intents/model.json', 'r')
+	json_file = open('Intents/all_lstm_model.json', 'r')
+
 	model = json_file.read()
 	json_file.close()
 	model = model_from_json(model)
-	# load weights into new model
-	model.load_weights("Intents/model.h5")
+	model.load_weights("Intents/all_lstm_model_weights.h5")
+
 	unk = 5
 	enc = tokenizer.texts_to_sequences(np.array([sent]))
 	s = pad_sequences(enc, maxlen=max_len, padding='post')
 	rank = model.predict(s).flatten()
 	rank = (np.argpartition(rank, -2)[-2:])[::-1]
-	# +1 since the indices are 0-based but the classes are 1-based
-	first, second = rank[0] + 1, rank[1] + 1
 
+	# +1 since the indices are 0-based but the classes are 1-based
+
+	first, second = rank[0] + 1, rank[1] + 1
 	rb_score = rule_based_score(sent)
 	rb_score[unk] = 0
 	# rule-based score of the predicted classes
 	x, y = rb_score[first], rb_score[second]
-
 	if max(list(rb_score.keys())) > 50:
 		return 4
-	
+
 	if first != unk and second != unk:
 		if y - x >= 2:
 			return second
@@ -102,3 +105,5 @@ def predict(sent: str) -> int:
 				return s
 			else:
 				return -1
+
+print(predict('من کسحلم '))
