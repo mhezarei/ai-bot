@@ -30,7 +30,7 @@ def find_dates(sentence_lem):
                                        settings={'TIMEZONE': '+0330'})
         fa_datetime = JalaliDate(en_datetime)
         fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
-    print("dates : " + str(fa_dates))
+
 
     # find dates like "18 اسفند"
     dates = [x.group() for x in re.finditer(r"\d+[\s][\u0600-\u06FF]+", sentence)]
@@ -63,7 +63,7 @@ def find_dates(sentence_lem):
         day = fa_dates[i].split("-")[2]
 
         fa_dates[i] = f"{year}-{month}-{day}"
-
+    print("dates : " + str(fa_dates))
     return fa_dates
 
 

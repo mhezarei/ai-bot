@@ -14,6 +14,7 @@ from aryana import aryana
 from nevisa import nevisa
 from speechRec import google
 
+
 class BOT:
     def __init__(self):
         self.modified = False
@@ -24,7 +25,7 @@ class BOT:
     '''
     This method takes an string as input, the string contains the string of question.
     If you are using this method, we presume that you want to use nevisa and ariana.
-    
+
     :Param Question : an string containing the question.
 
     : return : A dictionary containing the type of question, corresponding arguments, api_url and result.
@@ -87,23 +88,27 @@ class BOT:
                 # raise ValueError("Type 3 Error!")
                 pass
         elif answer["type"] == '4':
+            answer["city"] = []
             try:
                 answer["api_url"] = ["https://www.time.ir/"]
-
-                if answer["calendar_type"] and answer["date"]:
-                    target = answer["calendar_type"][0]
-                    if target == "شمسی":
-                        answer["result"] = convert_date(answer["date"][0],
-                                                        "shamsi", "shamsi")
-                    elif target == "قمری":
-                        answer["result"] = convert_date(answer["date"][0],
-                                                        "shamsi", "hijri")
-                    elif target == "میلادی":
-                        answer["result"] = convert_date(answer["date"][0],
-                                                        "shamsi", "greg")
-
-                if answer["date"]:
-                    answer["result"] = answer["date"][0]
+                if 'مناسبت' in Question:
+                    answer["result"] = answer["event"]
+                    answer["event"] = []
+                else:
+                    if answer["calendar_type"] and answer["date"]:
+                        target = answer["calendar_type"][0]
+                        print(target)
+                        if target == "شمسی":
+                            answer["result"] = convert_date(answer["date"][0],
+                                                            "shamsi", "shamsi")
+                        elif target == "قمری":
+                            answer["result"] = convert_date(answer["date"][0],
+                                                            "shamsi", "hijri")
+                        elif target == "میلادی":
+                            answer["result"] = convert_date(answer["date"][0],
+                                                            "shamsi", "greg")
+                    elif answer["date"]:
+                        answer["result"] = answer["date"][0]
             except Exception:
                 # raise ValueError("Type 4 Error!")
                 pass
@@ -116,7 +121,7 @@ class BOT:
 
     '''
     This method takes an string as input, the string contains the address of .wav file.
-    
+
     :Param Address : an string containing the path of .wav file.
 
     : return : A dictionary containing the type of question, corresponding arguments, api_url and result.
@@ -132,16 +137,14 @@ class BOT:
 
         start = time.time()
 
-        file=open(Address,mode='rb')
+        file = open(Address, mode='rb')
 
         """ Google """
         text = google(file)
 
-
         """ Nevisa """
         # comment="0024399744"
         # text = nevisa(file,comment)
-
 
         """ Deepmine """
         # #Create instance Deepmine()
@@ -153,14 +156,13 @@ class BOT:
 
         end = time.time()
         print(f"Runtime of the speechRecognition API is {end - start}")
-        
+
         answer = self.AIBOT(text)
 
         start = time.time()
 
         generated_sentence = "این یک جمله‌ای صرفا برای امتحان کردن است"
         response = aryana(generated_sentence)
-
 
         end = time.time()
         print(f"Runtime of the text-to-speech API is {end - start}")

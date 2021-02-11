@@ -15,4 +15,4 @@ def google(file):
     with sr.AudioFile(file) as source:
         data = r.record(source)
     text = r.recognize_google(data, language='fa-IR')
-    return(text)  
+    return(text)
