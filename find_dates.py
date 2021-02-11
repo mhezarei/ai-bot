@@ -48,10 +48,11 @@ def find_dates(sentence_lem):
                 fa_dates[i] = f"{year}-{month}-{day}"
 
     # find dates like "سال 99", "سال 1399"
-    dates = [x.group() for x in re.finditer(r"[سال|روز][\s]\d+", sentence)]
+    dates = [x.group() for x in re.finditer(r"((سال)|(کدام روز))[\s]\d+", sentence)]
     for i in range(len(dates)):
 
-        year = dates[i].split(" ")[1]
+        splited = dates[i].split(" ")
+        year = splited[len(splited) - 1]
 
         if len(year) == 2:
             year = '13' + year
