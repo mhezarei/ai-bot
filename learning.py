@@ -20,7 +20,7 @@ mapping = {0: "weather",
            3: "date",
            4: "unknown"}
 
-df = pd.read_csv("Intents/questions and data.csv", index_col=0)
+df = pd.read_csv("questions and data.csv", index_col=0)
 df_x = df["questions"].values
 df_y = df["class0"].values
 # df = pd.read_csv("mh_clean.csv")
@@ -53,18 +53,18 @@ def train_model():
 # model, eval_summary = train_model()
 # print(eval_summary)
 # model_json = model.to_json()
-# with open("Intents/all_lstm_model.json", "w") as json_file:
+# with open("all_lstm_model.json", "w") as json_file:
 #     json_file.write(model_json)
-# model.save_weights("Intents/all_lstm_model_weights.h5")
+# model.save_weights("all_lstm_model_weights.h5")
 # print("Saved model to disk")
 
 def predict(sent: str) -> int:
-	json_file = open('Intents/all_lstm_model.json', 'r')
+	json_file = open('all_lstm_model.json', 'r')
 
 	model = json_file.read()
 	json_file.close()
 	model = model_from_json(model)
-	model.load_weights("Intents/all_lstm_model_weights.h5")
+	model.load_weights("all_lstm_model_weights.h5")
 
 	unk = 5
 	enc = tokenizer.texts_to_sequences(np.array([sent]))
