@@ -1,3 +1,5 @@
+import time
+
 from datetime import datetime
 from find import find
 from learning import predict
@@ -128,6 +130,8 @@ class BOT:
         You should implement your code right here.
         '''
 
+        start = time.time()
+
         file=open(Address,mode='rb')
 
         """ Google """
@@ -146,11 +150,20 @@ class BOT:
         # status,text = m.get_text(Address)
 
         print("Text::", text)
+
+        end = time.time()
+        print(f"Runtime of the speechRecognition API is {end - start}")
         
         answer = self.AIBOT(text)
 
+        start = time.time()
+
         generated_sentence = "این یک جمله‌ای صرفا برای امتحان کردن است"
         response = aryana(generated_sentence)
+
+
+        end = time.time()
+        print(f"Runtime of the text-to-speech API is {end - start}")
 
         with open("response.wav", mode='bw') as f:
             f.write(response.content)
