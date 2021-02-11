@@ -57,13 +57,13 @@ def train_model():
 	return model, evaluation
 
 
-model, eval_summary = train_model()
-model_json = model.to_json()
-with open("model.json", "w") as json_file:
-    json_file.write(model_json)
-print(eval_summary)
-model.save_weights("model.h5")
-print("model saved")
+# model, eval_summary = train_model()
+# model_json = model.to_json()
+# with open("model.json", "w") as json_file:
+#     json_file.write(model_json)
+# print(eval_summary)
+# model.save_weights("model.h5")
+# print("model saved")
 
 def predict(sent: str) -> int:
 	p = os.path.dirname(os.path.abspath(__file__))
