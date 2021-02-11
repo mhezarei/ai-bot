@@ -9,6 +9,8 @@ from utility import convert_date
 
 from deepmine import Deepmine
 from aryana import aryana
+from nevisa import nevisa
+from speechRec import google
 
 class BOT:
     def __init__(self):
@@ -126,10 +128,24 @@ class BOT:
         You should implement your code right here.
         '''
 
-        #Create instance Deepmine()
-        m = Deepmine()
-        # get text of your file! return status,text: if status==0 error occured.
-        status,text = m.get_text(Address)
+        file=open(Address,mode='rb')
+
+        """ Google """
+        text = google(file)
+
+
+        """ Nevisa """
+        # comment="0024399744"
+        # text = nevisa(file,comment)
+
+
+        """ Deepmine """
+        # #Create instance Deepmine()
+        # m = Deepmine()
+        # # get text of your file! return status,text: if status==0 error occured.
+        # status,text = m.get_text(Address)
+
+        print("Text::", text)
         
         answer = self.AIBOT(text)
 
