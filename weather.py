@@ -48,10 +48,10 @@ class Weather:
 	def parse_future(self, data) -> Tuple[str, str]:
 		dt_utc = self.dt + 12600
 		for h in data["hourly"]:
-			if abs(dt_utc - h["dt"]) <= 1800:
+			if abs(dt_utc - h["dt"]) <= 1800:  # add and
 				return self.extract_cond(h)
 		for d in data["daily"]:
-			if abs(dt_utc - d["dt"]) <= 12 * 3600:
+			if abs(dt_utc - d["dt"]) <= 12 * 3600:  # add and
 				return self.extract_cond(d)
 		return "", ""
 	

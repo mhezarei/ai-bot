@@ -19,7 +19,7 @@ class ReligiousTime:
 	def __init__(self, rel_time: str, city: str, date: str):
 		self.rel_time = rel_time
 		self.city, self.country = get_english_names(city)
-		self.method = '2'
+		self.method = '7'
 		self.year, self.month, self.day = split_date(date)
 		self.base_url = "http://api.aladhan.com/v1/calendarByCity"
 		self.url = ""
