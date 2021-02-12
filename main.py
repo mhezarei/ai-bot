@@ -3,14 +3,12 @@ import time
 from aibot import BOT
 
 
-
 def main():
-
     start = time.time()
 
     my_bot = BOT()
 
-    sentence = 'روز دندانپزشک در سال ۱۳۹۶؟  '
+    sentence = 'ساعت اذان ظهر بیروت و دمای هوای تهران امروز چقدر است؟  '
     answer = my_bot.AIBOT(sentence)
 
     # answer = my_bot.aibot('input.wav')

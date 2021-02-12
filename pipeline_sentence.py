@@ -1,17 +1,10 @@
 from transformers import pipeline
-from transformers import AutoTokenizer, AutoModelForTokenClassification, TFBertModel, PreTrainedTokenizerFast
 from hazm import word_tokenize, Lemmatizer, Normalizer
 import os
 
 
-def pipeline_sentence(sentence):
+def pipeline_sentence(sentence, model, tokenizer):
     sentence = change_words(sentence)
-
-    # /var/www/AIBot/media/bert-base-parsbert-ner-uncased
-    tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
-    model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
-    # tokenizer = AutoTokenizer.from_pretrained("HooshvareLab/bert-base-parsbert-ner-uncased")
-    # model = AutoModelForTokenClassification.from_pretrained("HooshvareLab/bert-base-parsbert-ner-uncased")
 
     normalizer = Normalizer()
     sentence = normalizer.normalize(sentence)

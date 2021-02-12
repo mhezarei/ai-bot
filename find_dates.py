@@ -7,12 +7,8 @@ import jdatetime
 
 
 def find_dates(sentence_lem):
-    en_dates = []
     fa_dates = []
-    times = []
     sentence = find_dates_replace(sentence_lem)
-    print("se : " + sentence)
-    count_dates = 0
     for regX in ["امروز", "دیروز", "فردا", "پارسال", "امسال",
                  r"([\u0660-\u0669]|[\d])+[\s]روز[\s]پیش", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]پیش", r"([\u0660-\u0669]|[\d])+[\s]سال[\s]پیش",
                  r"([\u0660-\u0669]|[\d])+[\s]روز[\s]بعد", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]بعد", r"([\u0660-\u0669]|[\d])+[\s]سال[\s]بعد"]:
@@ -25,11 +21,7 @@ def find_dates(sentence_lem):
             fa_datetime = JalaliDate(en_datetime)
             fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
 
-    if len(fa_dates) == 0:
-        en_datetime = dateparser.parse('امروز',
-                                       settings={'TIMEZONE': '+0330'})
-        fa_datetime = JalaliDate(en_datetime)
-        fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
+
 
 
     # find dates like "18 اسفند"
@@ -63,6 +55,12 @@ def find_dates(sentence_lem):
         day = fa_dates[i].split("-")[2]
 
         fa_dates[i] = f"{year}-{month}-{day}"
+
+    if len(fa_dates) == 0:
+        en_datetime = dateparser.parse('امروز',
+                                       settings={'TIMEZONE': '+0330'})
+        fa_datetime = JalaliDate(en_datetime)
+        fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
     print("dates : " + str(fa_dates))
     return fa_dates
 

@@ -1,14 +1,8 @@
 import time
 
-from datetime import datetime
-from find import find
-from learning import predict
-from weather import Weather
-from religious_time import ReligiousTime
-from mhr_time import Time
-from date import Date
-from utility import convert_date
+from transformers import AutoTokenizer, AutoModelForTokenClassification
 
+from ansewr_per_question import answer_per_question
 from deepmine import Deepmine
 from aryana import aryana
 from nevisa import nevisa
@@ -32,90 +26,30 @@ class BOT:
     '''
 
     def AIBOT(self, Question):
-        answer = {'type': '0', 'city': [], 'date': [],
+        answer = {'type': [], 'city': [], 'date': [],
                   'time': [], 'religious_time': [], 'calendar_type': [],
-                  'event': [], 'api_url': [], 'result': ''}
-        '''
-        You should implement your code right here.
-        '''
+                  'event': [], 'api_url': [], 'result': []}
+        answer_set = {'type': set(), 'city': set(), 'date': set(),
+                      'time': set(), 'religious_time': set(), 'calendar_type': set(),
+                      'event': set(), 'api_url': set(), 'result': []}
 
-        answer, method = find(Question)
-        try:
-            answer["type"] = str(predict(Question))
-        except Exception:
-            raise ValueError("Type Predict Error!")
+        # /var/www/AIBot/media/bert-base-parsbert-ner-uncased
 
-        if answer["type"] == '1':
-            # HANDLED BY ARGUMENTS
-            # method = "temp"
-            greg_date = convert_date(answer["date"][0], "shamsi",
-                                     "greg")
-            print(answer["date"][0])
-            try:
-                current_dt = int(datetime.timestamp(datetime.now()))
-                w = Weather(answer["city"][0], greg_date, current_dt)
-                temp, cond = w.send_request()
-                if method == "temp":
-                    answer["result"] = temp
-                elif method == "cond":
-                    answer["result"] = cond
-                answer["api_url"] = [w.url]
-            except Exception:
-                # raise ValueError("Type 1 Error!")
-                pass
+        tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
+        model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
+        Questions = Question.split(' و ')  # TODO
+        for sentence in Questions:
+            q_answer = answer_per_question(sentence, model, tokenizer)
 
-        elif answer["type"] == '2':
-            try:
-                greg_date = convert_date(answer["date"][0], "shamsi",
-                                         "greg")
-                rl = ReligiousTime(answer["religious_time"][0], answer["city"][0],
-                                   greg_date)
-                res = rl.get_rel_timing()
-                answer["result"] = res
-                answer["api_url"] = [rl.url]
-            except Exception:
-                # raise ValueError("Type 2 Error!")
-                pass
-        elif answer["type"] == '3':
-            try:
-                t = Time(answer["city"][0])
-                res = t.send_request()
-                answer["result"] = res
-                answer["api_url"] = [t.url]
-                answer["date"] = []
-                answer["time"] = []
-            except Exception:
-                # raise ValueError("Type 3 Error!")
-                pass
-        elif answer["type"] == '4':
-            answer["city"] = []
-            try:
-                answer["api_url"] = ["https://www.time.ir/"]
-                if 'مناسبت' in Question:
-                    answer["result"] = answer["event"]
-                    answer["event"] = []
+            for key in answer_set.keys():
+                if key == "type":
+                    answer_set[key].add(q_answer[key])
+                elif key == "result":
+                    answer_set[key].append(q_answer[key])
                 else:
-                    if answer["calendar_type"] and answer["date"]:
-                        target = answer["calendar_type"][0]
-                        print(target)
-                        if target == "شمسی":
-                            answer["result"] = convert_date(answer["date"][0],
-                                                            "shamsi", "shamsi")
-                        elif target == "قمری":
-                            answer["result"] = convert_date(answer["date"][0],
-                                                            "shamsi", "hijri")
-                        elif target == "میلادی":
-                            answer["result"] = convert_date(answer["date"][0],
-                                                            "shamsi", "greg")
-                    elif answer["date"]:
-                        answer["result"] = answer["date"][0]
-            except Exception:
-                # raise ValueError("Type 4 Error!")
-                pass
-        elif answer["type"] == '-1':
-            answer = {'type': '-1', 'city': [], 'date': [],
-                      'time': [], 'religious_time': [], 'calendar_type': [],
-                      'event': [], 'api_url': [], 'result': ''}
+                    answer_set[key].update(q_answer[key])
+        for key in answer.keys():
+            answer[key] = list(answer_set[key])
 
         return answer
 
