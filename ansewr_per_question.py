@@ -1,5 +1,6 @@
 from datetime import datetime
 from find import find
+from find_time_from_religious import find_time_from_religious
 from learning import predict
 from weather import Weather
 from religious_time import ReligiousTime
@@ -21,6 +22,10 @@ def answer_per_question(Question, model, tokenizer):
                                  "greg")
         print(answer["date"][0])
         try:
+            if answer["religious_time"]:
+                time, url = find_time_from_religious(answer)
+                answer["time"].append(time)
+                answer["api_url"].append(url)
             current_dt = int(datetime.timestamp(datetime.now()))
             w = Weather(answer["city"][0], greg_date, current_dt)
             temp, cond = w.send_request()
@@ -28,20 +33,16 @@ def answer_per_question(Question, model, tokenizer):
                 answer["result"] = temp
             elif method == "cond":
                 answer["result"] = cond
-            answer["api_url"] = [w.url]
+            answer["api_url"].append(w.url)
+            if answer["religious_time"]:
+                answer["time"] = []
         except Exception:
             # raise ValueError("Type 1 Error!")
             pass
 
     elif answer["type"] == '2':
         try:
-            greg_date = convert_date(answer["date"][0], "shamsi",
-                                     "greg")
-            rl = ReligiousTime(answer["religious_time"][0], answer["city"][0],
-                               greg_date)
-            res = rl.get_rel_timing()
-            answer["result"] = res
-            answer["api_url"] = [rl.url]
+            answer["result"], answer["api_url"] = find_time_from_religious(answer)
         except Exception:
             # raise ValueError("Type 2 Error!")
             pass

@@ -13,6 +13,7 @@ def find_dates(sentence_lem):
                  r"([\u0660-\u0669]|[\d])+[\s]روز[\s]پیش", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]پیش", r"([\u0660-\u0669]|[\d])+[\s]سال[\s]پیش",
                  r"([\u0660-\u0669]|[\d])+[\s]روز[\s]بعد", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]بعد", r"([\u0660-\u0669]|[\d])+[\s]سال[\s]بعد"]:
         en_datetimes = [x.group() for x in re.finditer(regX, sentence)]
+
         # if re.search(regX, sentence) is not None:
         #     en_datetime = dateparser.parse(re.search(regX, sentence).group(0),
         #                                    settings={'TIMEZONE': '+0330'})
@@ -71,6 +72,7 @@ def find_dates_replace(sentence):
     sentence = sentence.replace('اذر', 'آذر')
     sentence = sentence.replace('دیگر', 'بعد')
     sentence = sentence.replace('آینده', 'بعد')
+    sentence = sentence.replace('قبل', 'پیش')
     # replace numbers
     sentence = sentence.replace("یک ", "1 ")
     sentence = sentence.replace("دو ", "2 ")
@@ -126,5 +128,4 @@ def find_dates_replace(sentence):
 
     if not re.findall(r"([\u0660-\u0669]|[\d])+[\s]سال[\s]بعد", sentence):
         sentence = sentence.replace("سال بعد", "1 سال بعد")
-
     return sentence
