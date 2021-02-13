@@ -19,7 +19,7 @@ def answer_per_question(Question, model, tokenizer):
         # HANDLED BY ARGUMENTS
         # method = "temp"
         greg_date = convert_date(answer["date"][0], "shamsi",
-                                 "greg")
+                                 "greg") + answer["time"]
         print(answer["date"][0])
         try:
             if answer["religious_time"]:

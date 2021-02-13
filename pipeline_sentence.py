@@ -17,7 +17,7 @@ def pipeline_sentence(sentence, model, tokenizer):
 
 
 def change_words(sentence):
-    symbols = "!\"#$%&()*+-./;<=>?@[\]^_`{|}~\n،,؟؛"
+    symbols = "!\"#$%&()*+-./;<=>?@[\\]^_`{|}~\n،,؟؛"
     for i in symbols:
         sentence = str.replace(sentence, i, ' ')
 

@@ -57,7 +57,8 @@ class Weather:
 	
 	def extract_cond(self, pred: dict) -> Tuple[str, str]:
 		# Return the temperature and weather condition code
-		temp = pred["temp"]
+		temp = pred["temp"] if isinstance(pred["temp"], float) else \
+			pred["temp"]["day"]
 		cond = pred["weather"][0]["main"].lower()
 		cond_persian = -1
 		if "cloud" in cond:
