@@ -4,7 +4,7 @@ from utility import *
 
 
 class Weather:
-	def __init__(self, city: str, dt: str, current_dt: int):
+	def __init__(self, city: str, dt: str, current_dt: int, full_day: bool = False):
 		self.city, self.country = get_english_names(city)
 		self.lat, self.lon = get_lat_lon(self.city)
 		self.dt = parse_datetime(dt)
@@ -13,8 +13,9 @@ class Weather:
 		self.forecast_url = "https://api.openweathermap.org/data/2.5/onecall?appid=345d8217035c76f9bd352963c9f009a7&units=metric&exclude=alerts,minutely&"
 		self.history_url = "https://api.openweathermap.org/data/2.5/onecall/timemachine?appid=345d8217035c76f9bd352963c9f009a7&units=metric&"
 		self.url = ""
+		self.full = full_day
 	
-	def send_request(self) -> Tuple[str, str]:
+	def send_request(self):
 		# if self.current_dt - self.dt >= 5 * 24 * 3600:
 		# 	raise ValueError(
 		# 		"The requested past time must be within the last 5 days!")
@@ -37,7 +38,9 @@ class Weather:
 			raise RuntimeError(
 				f"Error {resp.status_code} while getting the page")
 		
-		if self.dt < self.current_dt:
+		if self.full:
+			return self.parse_full(resp.json())
+		elif self.dt < self.current_dt:
 			return self.parse_history(resp.json())
 		else:
 			return self.parse_future(resp.json())
@@ -72,3 +75,9 @@ class Weather:
 		elif "storm" in cond:
 			cond_persian = "طوفانی"
 		return str(temp), cond_persian
+
+	def parse_full(self, data) -> list:
+		start_time = 86400 * (self.dt + 12600 / 86400)
+		finish_time = start_time + (23 * 3600)
+		temps = [t["temp"] for t in data["hourly"] if start_time <= t["dt"] <= finish_time]
+		return [min(temps), max(temps), sum(temps) / len(temps)]
