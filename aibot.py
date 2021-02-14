@@ -45,7 +45,8 @@ class BOT:
                 if key == "type":
                     answer_set[key].add(q_answer[key])
                 elif key == "result":
-                    answer_set[key].append(q_answer[key])
+                    if not q_answer[key] == "":
+                        answer_set[key].append(q_answer[key])
                 else:
                     answer_set[key].update(q_answer[key])
         for key in answer.keys():

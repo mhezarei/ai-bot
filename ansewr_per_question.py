@@ -18,17 +18,19 @@ def answer_per_question(Question, model, tokenizer):
     if answer["type"] == '1':
         # HANDLED BY ARGUMENTS
         # method = "temp"
+        if answer["religious_time"]:
+            answer["time"], answer["api_url"] = find_time_from_religious(answer)
+            print(answer["time"])
+        if not answer["time"]:
+            answer["time"] = ["12:00"]
         greg_date = convert_date(answer["date"][0], "shamsi",
-                                 "greg") + answer["time"]
+                                 "greg") + " " + answer["time"][0]
         print(answer["date"][0])
         try:
-            if answer["religious_time"]:
-                time, url = find_time_from_religious(answer)
-                answer["time"].append(time)
-                answer["api_url"].append(url)
             current_dt = int(datetime.timestamp(datetime.now()))
             w = Weather(answer["city"][0], greg_date, current_dt)
             temp, cond = w.send_request()
+            w
             if method == "temp":
                 answer["result"] = temp
             elif method == "cond":

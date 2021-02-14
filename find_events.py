@@ -44,4 +44,5 @@ def find_events(sentence, dates):
         if len(new_dates) == 0:
             new_dates = dates
     print("events : " + str(events))
+
     return events, new_dates

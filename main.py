@@ -8,7 +8,7 @@ def main():
 
     my_bot = BOT()
 
-    sentence = 'دمای هوای در زمان نیمه شب شرعی امروز قم چقدر است؟ '
+    sentence = 'روز حافظ در سال ۹۹ چه روزی است؟'
     answer = my_bot.AIBOT(sentence)
 
     # answer = my_bot.aibot('input.wav')
