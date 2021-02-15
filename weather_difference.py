@@ -27,7 +27,16 @@ def weather_difference(Question, answer, str_separator):
     greg_date1 = convert_date(date1, "shamsi",
                               "greg") + " " + time1
     # TODO IF CITY ARE SAME
-    temp, cond, url2 = find_weather_from_city_date(sentences[1], city, greg_date1)
+    weather_words = ["حداکثر", "بیشترین", "گرمترین", "گرم‌ترین",
+                     "گرم ترین", "حداقل", "کمترین", "کمینه", "میانگین",
+                     'دما', 'درجه', 'اندازه', 'چقدر', 'میزان']
+    sentence1 = ""
+    for elem in weather_words:
+        if elem in sentences[1]:
+            sentence1 = sentences[1]
+    if not sentence1:
+        sentence1 = sentences[0]
+    temp, cond, url2 = find_weather_from_city_date(sentence1, city, greg_date1)
     temps.append(temp)
     urls.append(url2)
     return temps, urls

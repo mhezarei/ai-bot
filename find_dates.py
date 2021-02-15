@@ -8,6 +8,7 @@ import jdatetime
 
 def find_dates(sentence_lem):
     fa_dates = []
+    indexes = []
     sentence = find_dates_replace(sentence_lem)
     for regX in ["امروز", "دیروز", "فردا", "پارسال", "امسال",
                  r"([\u0660-\u0669]|[\d])+[\s]روز[\s]پیش", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]پیش",
@@ -20,6 +21,7 @@ def find_dates(sentence_lem):
         #     en_datetime = dateparser.parse(re.search(regX, sentence).group(0),
         #                                    settings={'TIMEZONE': '+0330'})
         for strDate in en_datetimes:
+            indexes.append(sentence_lem.find(strDate))
             en_datetime = dateparser.parse(strDate, settings={'TIMEZONE': '+0330'})
             fa_datetime = JalaliDate(en_datetime)
             fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
@@ -30,6 +32,7 @@ def find_dates(sentence_lem):
         for per_month in ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'ابان', 'اذر', 'دی', 'بهمن',
                           'اسفند']:
             if per_month in dates[i]:
+                indexes.append(sentence_lem.find(dates[i]))
                 en_datetime = JalaliCalendar(dates[i]).get_date()
                 fa_datetime = JalaliDate(en_datetime.date_obj)
                 temp = fa_datetime.strftime('%Y-%m-%d')
@@ -47,7 +50,6 @@ def find_dates(sentence_lem):
     # find dates like "سال 99", "سال 1399"
     dates = [x.group() for x in re.finditer(r"((سال)|(کدام روز))[\s]\d+", sentence)]
     for i in range(len(dates)):
-
         splited = dates[i].split(" ")
         year = splited[len(splited) - 1]
 
@@ -62,6 +64,9 @@ def find_dates(sentence_lem):
         fa_dates[i] = f"{year}-{month}-{day}"
 
     print("dates : " + str(fa_dates))
+    print("indexes : " + str(indexes))
+    fa_dates = [x for _, x in sorted(zip(indexes, fa_dates))]
+
     return fa_dates
 
 

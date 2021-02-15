@@ -8,7 +8,7 @@ def main():
 
     my_bot = BOT()
 
-    sentence = " مروز حداقل دمای هوای مشهد سردتر است یا تهران؟ "
+    sentence = "امروز ساعت دو و نیم بعد از ظهر هوای تهران سردتر است یا فردا ساعت سه و نیم بامداد؟  "
     answer = my_bot.AIBOT(sentence)
 
     # answer = my_bot.aibot('input.wav')

@@ -2,7 +2,7 @@ import time
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 
-from ansewr_per_question import answer_per_question
+from answer_per_question import answer_per_question
 from deepmine import Deepmine
 from aryana import aryana
 from find_events_in_sentence import find_events_in_sentence

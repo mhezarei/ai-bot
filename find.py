@@ -7,7 +7,7 @@ from find_time import find_date_time
 from pipeline_sentence import pipeline_sentence
 from tokens_in_sentence import find_tokens_in_sentence
 from find_calendar_types import find_calendar_types
-from find_weather import find_weather_method
+from find_weather_method import find_weather_method
 
 
 # If you don't have model -> Comment 7, 8, 23, 24 lines and Uncomment 27, 28, 29 lines
