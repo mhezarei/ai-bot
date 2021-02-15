@@ -8,7 +8,7 @@ def main():
 
     my_bot = BOT()
 
-    sentence = 'اندازه دمای هوای دو روز بعد شهر اردبیل ساعت پنج چند درجه است؟'
+    sentence = " مروز حداقل دمای هوای مشهد سردتر است یا تهران؟ "
     answer = my_bot.AIBOT(sentence)
 
     # answer = my_bot.aibot('input.wav')

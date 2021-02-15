@@ -12,7 +12,7 @@ from find_weather import find_weather_method
 
 # If you don't have model -> Comment 7, 8, 23, 24 lines and Uncomment 27, 28, 29 lines
 
-def find(sentence_temp, model, tokenizer):
+def find(sentence_temp, model, tokenizer, all_events, all_event_keys):
     sentence = sentence_temp
     try:
         calender_types = find_calendar_types(sentence)
@@ -58,7 +58,7 @@ def find(sentence_temp, model, tokenizer):
         times = []
 
     try:
-        events, dates = find_events(sentence_temp, dates)
+        events, dates = find_events(sentence_temp, dates, all_events, all_event_keys)
     except Exception:
         # raise ValueError("find_events_dates Error!")
         events, dates = [], []

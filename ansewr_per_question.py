@@ -1,15 +1,18 @@
 from datetime import datetime
 from find import find
+from find_fit_word import find_fit_word
 from find_time_from_religious import find_time_from_religious
+from find_weather_from_city_date import find_weather_from_city_date
 from learning import predict
 from weather import Weather
 from religious_time import ReligiousTime
 from mhr_time import Time
 from utility import convert_date
+from weather_difference import weather_difference
 
 
-def answer_per_question(Question, model, tokenizer):
-    answer, method = find(Question, model, tokenizer)
+def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
+    answer, method = find(Question, model, tokenizer, all_events, all_event_keys)
     try:
         answer["type"] = str(predict(Question))
     except Exception:
@@ -18,25 +21,47 @@ def answer_per_question(Question, model, tokenizer):
     if answer["type"] == '1':
         # HANDLED BY ARGUMENTS
         # method = "temp"
+        empty_time_flag = False
         if answer["religious_time"]:
             answer["time"], answer["api_url"] = find_time_from_religious(answer)
             print(answer["time"])
         if not answer["time"]:
+            empty_time_flag = True
             answer["time"] = ["12:00"]
-        greg_date = convert_date(answer["date"][0], "shamsi",
-                                 "greg") + " " + answer["time"][0]
-        print(answer["date"][0])
+
         try:
-            current_dt = int(datetime.timestamp(datetime.now()))
-            w = Weather(answer["city"][0], greg_date, current_dt)
-            temp, cond = w.send_request()
-            w
+            if "اختلاف" in Question or "تفاوت" in Question:
+                temps, urls = weather_difference(Question, answer, ' و ')
+                print(str(temps[1]) + "      ---    " + str(temps[0]))
+                temp = round(abs(temps[1] - temps[0]), 2)
+            elif "سردتر " in Question or "سرد تر " in Question:
+                temps, urls = weather_difference(Question, answer, ' یا ')
+                print(str(temps[1]) + "      ---    " + str(temps[0]))
+                if temps[1] < temps[0]:
+                    temp = find_fit_word(answer, True)
+                else:
+                    temp = find_fit_word(answer, False)
+            elif "گرم‌تر " in Question or "گرمتر " in Question or "گرم تر " in Question:
+                temps, urls = weather_difference(Question, answer, ' یا ')
+                print(str(temps[1]) + "      ---    " + str(temps[0]))
+                if temps[1] > temps[0]:
+                    temp = find_fit_word(answer, True)
+                else:
+                    temp = find_fit_word(answer, False)
+            else:
+                greg_date = convert_date(answer["date"][0], "shamsi",
+                                         "greg") + " " + answer["time"][0]
+                temp, cond, url = find_weather_from_city_date(Question, answer["city"][0], greg_date)
+                urls = [url]
+            answer["api_url"].extend(urls)
             if method == "temp":
-                answer["result"] = temp
+                answer["result"] = str(temp)
             elif method == "cond":
                 answer["result"] = cond
-            answer["api_url"].append(w.url)
+
             if answer["religious_time"]:
+                answer["time"] = []
+            if empty_time_flag:
                 answer["time"] = []
         except Exception:
             # raise ValueError("Type 1 Error!")
@@ -44,7 +69,8 @@ def answer_per_question(Question, model, tokenizer):
 
     elif answer["type"] == '2':
         try:
-            answer["result"], answer["api_url"] = find_time_from_religious(answer)
+            result, answer["api_url"] = find_time_from_religious(answer)
+            answer["result"] = result[0]
         except Exception:
             # raise ValueError("Type 2 Error!")
             pass

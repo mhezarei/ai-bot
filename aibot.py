@@ -5,6 +5,7 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification
 from ansewr_per_question import answer_per_question
 from deepmine import Deepmine
 from aryana import aryana
+from find_events_in_sentence import find_events_in_sentence
 from nevisa import nevisa
 from speechRec import google
 
@@ -40,9 +41,11 @@ class BOT:
 
         tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
         model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
-        Questions = Question.split(' و ')  # TODO
+        events, event_keys = find_events_in_sentence(Question)
+        Questions = Question.split(' . ')  # TODO
+
         for sentence in Questions:
-            q_answer = answer_per_question(sentence, model, tokenizer)
+            q_answer = answer_per_question(sentence, model, tokenizer, events, event_keys)
 
             for key in answer_set.keys():
                 if key == "type":

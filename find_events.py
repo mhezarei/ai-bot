@@ -3,9 +3,9 @@ import datetime
 import os
 
 
-def find_events(sentence, dates):
-    event_keys = []
+def find_events(sentence, dates, all_events, all_event_keys):
     events = []
+    event_keys = []
     p = os.path.dirname(os.path.abspath(__file__))
     if "مناسبت" in sentence:
         event_year = dates[0].split('-')[0]
@@ -19,17 +19,10 @@ def find_events(sentence, dates):
                 events.append(row["event"])
                 break
     else:
-        url1 = os.path.join(p, "find important events.csv")
-        df1 = pd.read_csv(url1)
-        important_events = df1['event']
-        important_events_key = df1['event_key']
-        for i in range(len(important_events)):
-            if important_events_key[i] in sentence:
-                events.append(important_events[i])
-                event_keys.append(important_events_key[i])
-            elif important_events[i] in sentence:
-                events.append(important_events[i])
-                event_keys.append(important_events_key[i])
+        for i in range(len(all_events)):
+            if all_events[i] in sentence or all_event_keys[i] in sentence:
+                events.append(all_events[i])
+                event_keys.append(all_event_keys[i])
         new_dates = []
         if len(events) > 0 and len(dates) > 0:
             year = dates[0].split('-')[0]
