@@ -3,6 +3,7 @@ import dateparser
 from persiantools.jdatetime import JalaliDate
 from dateparser.calendars.jalali import JalaliCalendar
 from unidecode import unidecode
+from persian_num_change import persian_num_change
 
 
 def find_date_time(tokens_lem, sentence):
@@ -57,3 +58,66 @@ def find_date_time(tokens_lem, sentence):
     print("times : " + str(times))
 
     return times
+
+def reformat_date_time(string):
+
+  def get_num(num):
+    persian_num = persian_num_change(num)
+    persian_num.results()
+    return persian_num.num
+
+  string = string.replace('ربع', '15 دقیقه')
+  string = string.replace('نیم', '30 دقیقه')
+
+  """ ساعت 3 و بیست و دو دقیقه """
+  numbers = [x.group() for x in re.finditer(r"ساعت ([\u0660-\u0669]|\d)+ و ((([\u0600-\u0659]|[\u0670-\u06EF])+ دقیقه)|(([\u0600-\u0659]|[\u0670-\u06EF])+ و ([\u0600-\u0659]|[\u0670-\u06EF])+ دقیقه))", string)]
+  for number in numbers:
+    to_replace = number.replace('ساعت ', '')
+    number = number.replace('ساعت ', '')
+    number = number.replace(' دقیقه', '')
+    numbers = number.split(' و ', maxsplit=1)
+    string = string.replace(to_replace, f'{str(unidecode(numbers[0])).zfill(2)}:{str(get_num(numbers[1])).zfill(2)}')
+
+  """ ساعت نه و 22 دقیقه """
+  numbers = [x.group() for x in re.finditer(r"ساعت ([\u0600-\u0659]|[\u0670-\u06EF])+ و (([\u0660-\u0669]|\d)+ دقیقه)", string)]
+  for number in numbers:
+    to_replace = number.replace('ساعت ', '')
+    number = number.replace('ساعت ', '')
+    number = number.replace(' دقیقه', '')
+    numbers = number.split(' و ', maxsplit=1)
+    string = string.replace(to_replace, f'{str(get_num(numbers[0])).zfill(2)}:{str(unidecode(numbers[1])).zfill(2)}')
+
+  """ ساعت نه و بیست و دو دقیقه """
+  numbers = [x.group() for x in re.finditer(r"ساعت ([\u0600-\u0659]|[\u0670-\u06EF])+ و ((([\u0600-\u0659]|[\u0670-\u06EF])+ دقیقه)|(([\u0600-\u0659]|[\u0670-\u06EF])+ و ([\u0600-\u0659]|[\u0670-\u06EF])+ دقیقه))", string)]
+  for number in numbers:
+    to_replace = number.replace('ساعت ', '')
+    number = number.replace('ساعت ', '')
+    number = number.replace(' دقیقه', '')
+    numbers = number.split(' و ', maxsplit=1)
+    string = string.replace(to_replace, f'{str(get_num(numbers[0])).zfill(2)}:{str(get_num(numbers[1])).zfill(2)}')
+
+  """ ساعت نه"""
+  numbers = [x.group() for x in re.finditer(r"ساعت ([\u0600-\u0659]|[\u0670-\u06EF])+", string)]
+  for number in numbers:
+    to_replace = number.replace('ساعت ', '')
+    number = number.replace('ساعت ', '')
+    string = string.replace(to_replace, f'{str(get_num(number))}:00')
+
+  """ ساعت 9 و 22 دقیقه"""
+  numbers = [x.group() for x in re.finditer(r"ساعت ([\u0660-\u0669]|\d)+ و (([\u0660-\u0669]|\d)+ دقیقه)", string)]
+  for number in numbers:
+    to_replace = number.replace('ساعت ', '')
+    number = number.replace('ساعت ', '')
+    number = number.replace(' دقیقه', '')
+    numbers = number.split(' و ')
+    string = string.replace(to_replace, f'{str(unidecode(numbers[0])).zfill(2)}:{str(unidecode(numbers[1])).zfill(2)}')
+    print(string)
+
+  """ ساعت 5 """
+  numbers = [x.group() for x in re.finditer(r"ساعت ([\u0660-\u0669]|\d)+ ", string)]
+  for number in numbers:
+    to_replace = number.replace('ساعت ', '')
+    number = number.replace('ساعت ', '')
+    string = string.replace(to_replace, f'{str(unidecode(number)).zfill(2)}:00 ')
+
+  return string

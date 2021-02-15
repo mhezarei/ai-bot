@@ -33,6 +33,9 @@ class BOT:
                       'time': set(), 'religious_time': set(), 'calendar_type': set(),
                       'event': set(), 'api_url': set(), 'result': []}
 
+        from find_time import reformat_date_time
+        Question = reformat_date_time(Question)           
+
         # /var/www/AIBot/media/bert-base-parsbert-ner-uncased
 
         tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
