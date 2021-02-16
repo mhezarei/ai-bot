@@ -101,7 +101,10 @@ def reformat_date_time(string):
   for number in numbers:
     to_replace = number.replace('ساعت ', '')
     number = number.replace('ساعت ', '')
-    string = string.replace(to_replace, f'{str(get_num(number))}:00')
+    try:
+      string = string.replace(to_replace, f'{str(get_num(number))}:00')
+    except KeyError:
+      pass
 
   """ ساعت 9 و 22 دقیقه"""
   numbers = [x.group() for x in re.finditer(r"ساعت ([\u0660-\u0669]|\d)+ و (([\u0660-\u0669]|\d)+ دقیقه)", string)]
