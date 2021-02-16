@@ -79,7 +79,19 @@ class Weather:
     def parse_full(self, data) -> list:
         start_time = self.dt - 12 * 3600
         finish_time = start_time + (23 * 3600)
-        temps = [t["temp"] for t in data["hourly"] if start_time <= t["dt"] <= finish_time]
+        print("start time : " + str(start_time) + " finish time : " + str(finish_time))
+        temps = [float(t["temp"]) for t in data["hourly"] if start_time <= t["dt"] <= finish_time]
+        minimum = 0.00
+        maximum = 0.00
+        for d in data["daily"]:
+            if 24 * 3600 >= d["dt"] - (self.dt - 12 * 3600) >= 0:
+                minimum = d["temp"]["min"]
+                maximum = d["temp"]["max"]
+                break
         print("temps : " + str(temps))
-        out = [min(temps), max(temps), sum(temps) / len(temps)]
+        if len(temps) == 0:
+            mid = 0.00
+        else:
+            mid = round(sum(temps) / len(temps), 2)
+        out = [round(minimum, 2), round(maximum, 2), mid]
         return out

@@ -21,29 +21,29 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
     if answer["type"] == '1':
         # HANDLED BY ARGUMENTS
         # method = "temp"
-        empty_time_flag = False
+        time_len = len(answer["time"])
+        print("date 0 : " + answer["date"][0])
         if answer["religious_time"]:
-            answer["time"], answer["api_url"] = find_time_from_religious(answer)
-            print(answer["time"])
+            time, answer["api_url"] = find_time_from_religious(answer)
+            answer["time"].extend(time)
         if not answer["time"]:
-            empty_time_flag = True
             answer["time"] = ["12:00"]
 
         try:
             if "اختلاف" in Question or "تفاوت" in Question:
                 temps, urls = weather_difference(Question, answer, ' و ')
-                print(str(temps[1]) + "      ---    " + str(temps[0]))
+                print(str(temps[0]) + "      ---    " + str(temps[1]))
                 temp = round(abs(temps[1] - temps[0]), 2)
             elif "سردتر " in Question or "سرد تر " in Question:
                 temps, urls = weather_difference(Question, answer, ' یا ')
-                print(str(temps[1]) + "      ---    " + str(temps[0]))
+                print(str(temps[0]) + "      ---    " + str(temps[1]))
                 if temps[1] < temps[0]:
                     temp = find_fit_word(answer, True)
                 else:
                     temp = find_fit_word(answer, False)
             elif "گرم‌تر " in Question or "گرمتر " in Question or "گرم تر " in Question:
                 temps, urls = weather_difference(Question, answer, ' یا ')
-                print(str(temps[1]) + "      ---    " + str(temps[0]))
+                print(str(temps[0]) + "      ---    " + str(temps[1]))
                 if temps[1] > temps[0]:
                     temp = find_fit_word(answer, True)
                 else:
@@ -61,8 +61,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
 
             if answer["religious_time"]:
                 answer["time"] = []
-            if empty_time_flag:
-                answer["time"] = []
+            answer["time"] = answer[:time_len]
         except Exception:
             # raise ValueError("Type 1 Error!")
             pass
