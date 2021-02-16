@@ -3,7 +3,6 @@ from dateparser.calendars.jalali import JalaliCalendar
 from unidecode import unidecode
 import dateparser
 import re
-import jdatetime
 
 
 def find_dates(sentence_lem):
@@ -36,12 +35,17 @@ def find_dates(sentence_lem):
                 en_datetime = JalaliCalendar(dates[i]).get_date()
                 fa_datetime = JalaliDate(en_datetime.date_obj)
                 temp = fa_datetime.strftime('%Y-%m-%d')
-
-                year = fa_dates[i].split("-")[0]
+                if len(fa_dates) <= i:
+                    year = '1399'  # TODO - FIX FOR NEXT YEAR :D
+                else:
+                    year = fa_dates[i].split("-")[0]
                 month = temp.split("-")[1]
                 day = temp.split("-")[2]
+                if len(fa_dates) <= i:
+                    fa_dates.append(f"{year}-{month}-{day}")
+                else:
+                    fa_dates[i] = f"{year}-{month}-{day}"
 
-                fa_dates[i] = f"{year}-{month}-{day}"
     if len(fa_dates) == 0:
         en_datetime = dateparser.parse('امروز',
                                        settings={'TIMEZONE': '+0330'})
@@ -63,10 +67,8 @@ def find_dates(sentence_lem):
 
         fa_dates[i] = f"{year}-{month}-{day}"
 
-    print("dates : " + str(fa_dates))
-    print("indexes : " + str(indexes))
     fa_dates = [x for _, x in sorted(zip(indexes, fa_dates))]
-
+    print("dates : " + str(fa_dates))
     return fa_dates
 
 
