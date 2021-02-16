@@ -1,11 +1,8 @@
-from datetime import datetime
 from find import find
 from find_fit_word import find_fit_word
 from find_time_from_religious import find_time_from_religious
 from find_weather_from_city_date import find_weather_from_city_date
 from learning import predict
-from weather import Weather
-from religious_time import ReligiousTime
 from mhr_time import Time
 from utility import convert_date
 from weather_difference import weather_difference
@@ -22,7 +19,6 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
         # HANDLED BY ARGUMENTS
         # method = "temp"
         time_len = len(answer["time"])
-        print("date 0 : " + answer["date"][0])
         if answer["religious_time"]:
             time, answer["api_url"] = find_time_from_religious(answer)
             answer["time"].extend(time)

@@ -1,5 +1,6 @@
-from utility import *
 import os
+
+from utility import *
 
 
 class Date:
