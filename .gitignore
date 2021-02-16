@@ -248,3 +248,5 @@ dmypy.json
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,pycharm+all
 
 /Intents/phase2.ipynb
+/Intents/resources-0.5/
+/Intents/split.ipynb
