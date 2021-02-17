@@ -13,28 +13,28 @@ def weather_sentence(result: dict) -> str:
     if time is None:
         if 'ی' not in result["result"]:
             return random.choice([
-                f"damaye havaye {city} dar tarikhe {date.split('-')} {result['result']} daraje ast.",
-                f"darajeye hararate {city} dar tarikhe {date.split('-')} {result['result']} darajeye santigrad ast.",
-                f"dar tarikhe {date.split('-')}, shahre {city} damaye {result['result']} daraje darad.",
+                f"دمای هوای شهر {city} در تاریخ {date.split('-')}، {result['result']} درجه است.",
+                f"در تاریخ {date.split('-')} میزان دمای شهر {city} برابر با {result['result']} درجه‌ی سانتی‌گراد است.",
+                f"درجه‌ی حرارت شهر {city} در تاریخ {date.split('-')} برابر با {result['result']} درجه‌ی سانتی‌گراد است.",
             ])
         else:
             return random.choice([
-                f"{city} dar tarikhe {date.split('-')} {result['result']} ast.",
-                f"vaziiate havaye {city} {date.split('-')} {result['result']} ast.",
-                f"dar tarikhe {date.split('-')}, shahre {city} havaii {result['result']} darad.",
+                f"وضعیت آب و هوایی شهر {city} در تاریخ {date.split('-')} به صورت {result['result']} است.",
+                f"ساکنین شهر {city} در تاریخ {date.split('-')} هوایی {result['result']} را تجربه می‌کنند.",
+                f"در تاریخ {date.split('-')} شهر {city} هوایی {result['result']} دارد.",
             ])
     else:
         if 'ی' not in result["result"]:
             return random.choice([
-                f"damaye havaye {city} dar tarikhe {date.split('-')} va saate {time} {result['result']} daraje ast.",
-                f"darajeye hararate {city} dar tarikhe {date.split('-')} va saate {time} {result['result']} darajeye santigrad ast.",
-                f"dar tarikhe {date.split('-')} va saate {time}, shahre {city} damaye {result['result']} daraje darad.",
+                f"دمای هوای شهر {city} در تاریخ {date.split('-')} و ساعت {time} برابر با {result['result']} درجه است.",
+                f"در تاریخ {date.split('-')} و ساعت {time} میزان دمای شهر {city} برابر با {result['result']} درجه‌ی سانتی‌گراد است.",
+                f"درجه‌ی حرارت شهر {city} در تاریخ {date.split('-')} و ساعت {time} برابر با {result['result']} درجه‌ی سانتی‌گراد است.",
             ])
         else:
             return random.choice([
-                f"{city} dar tarikhe {date.split('-')} va saate {time} {result['result']} ast.",
-                f"vaziiate havaye {city} {date.split('-')} va saate {time} {result['result']} ast.",
-                f"dar tarikhe {date.split('-')} va saate {time}, shahre {city} havaii {result['result']} darad.",
+                f"وضعیت آب و هوایی شهر {city} در تاریخ {date.split('-')} و ساعت {time} به صورت {result['result']} است.",
+                f"ساکنین شهر {city} در تاریخ {date.split('-')} و ساعت {time} هوایی {result['result']} را تجربه می‌کنند.",
+                f"در تاریخ {date.split('-')} و ساعت {time} شهر {city} هوایی {result['result']} دارد.",
             ])
 
 
@@ -43,9 +43,7 @@ def religion_sentence(result: dict) -> str:
     city = result["city"][0]
     date = result["date"][0]
     return random.choice([
-        f"{rel_time} be ofoghe shahre {city} dar tarikhe {date}, {result['result']} ast.",
-        f"{rel_time} shahre {city} movarekhe {date} saate {result['result']} ast.",
-        f"dar tarikhe {date}, {rel_time} be vaghte {city} {result['result']} ast.",
+        f"اوقات شرعی {rel_time} به افق شهر {city} در تاریخ {date}، ساعت {result['result']} است.",
     ])
 
 
