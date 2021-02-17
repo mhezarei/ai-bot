@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[27]:
+# In[528]:
 
 
 from hazm import * 
 
 
-# In[256]:
+# In[529]:
 
 
 combs = []
@@ -16,11 +16,10 @@ with open("split_combs", "r") as a_file:
         combs.append(line.strip())
 
 
-# In[257]:
+# In[530]:
 
 
-def clean_sent (sent):
-    id_g = 1
+def clean_sent (sent, combs, id_g = 1):
     dic = {}
     for comb in combs : 
         if comb in sent :
@@ -31,7 +30,7 @@ def clean_sent (sent):
     return sent, dic
 
 
-# In[258]:
+# In[531]:
 
 
 def find_index (words, word_to_find):
@@ -43,7 +42,7 @@ def find_index (words, word_to_find):
     return indexes
 
 
-# In[259]:
+# In[532]:
 
 
 def should_be (indexes, i):
@@ -53,7 +52,7 @@ def should_be (indexes, i):
     return False;
 
 
-# In[260]:
+# In[533]:
 
 
 def get_chunks (indexes, words):
@@ -80,7 +79,7 @@ def get_chunks (indexes, words):
     return chunks, final
 
 
-# In[261]:
+# In[534]:
 
 
 def add_one (sent, arg):
@@ -90,7 +89,7 @@ def add_one (sent, arg):
     return sents
 
 
-# In[262]:
+# In[535]:
 
 
 def create_sents (sent, args):
@@ -112,7 +111,7 @@ def create_sents (sent, args):
         
 
 
-# In[263]:
+# In[536]:
 
 
 def replace_dic (dic, sents):
@@ -124,18 +123,10 @@ def replace_dic (dic, sents):
     return res
 
 
-# In[264]:
+# In[537]:
 
 
-def split (sent, events):
-    for event in events : 
-        if ' و ' in event : 
-            combs.append(event)
-    if 'اختلاف' in sent : 
-        sents = []
-        sents.append(sent)
-        return sents
-    sent, dic = clean_sent(sent)
+def split_near (sent):
     words = word_tokenize(sent)
     indxs = find_index(words, 'و')
     args, sent = get_chunks(indxs, words)
@@ -144,7 +135,127 @@ def split (sent, events):
         sents.append(sent)
         return replace_dic(dic, sents)
     sents = create_sents(sent, args)
+    return sents
+
+
+# In[538]:
+
+
+def find_comb_indexes (sent): 
+    words = word_tokenize(sent)
+    comb_indexes = []
+    for i, word in enumerate(words) : 
+        if word.startswith('کلمه'): 
+            comb_indexes.append(i)
+            
+    return comb_indexes
+
+
+# In[539]:
+
+
+def append(words):
+    res = ""
+    for w in words :
+        res += w 
+        if w != 'کلمه' :
+            res += " "
+    return res
+
+
+# In[540]:
+
+
+def first_split(comb_indexes, words):
+    last = 0
+    final = []
+    for i in comb_indexes: 
+        if i - last >= 3 :
+            final.append(append(words[last:i-1]))
+            last = i
+    final.append(append(words[last:]))
+    
+    return final
+
+
+# In[541]:
+
+
+def complete_split (firsts):
+    final = []
+    for s in firsts : 
+        if ' و ' in s : 
+            final.extend(split_near(s))
+        else :
+            final.append(s)
+    return final
+
+
+# In[542]:
+
+
+def split(sent, events): 
+    if 'اختلاف' in sent or 'تفاوت' in sent: 
+        sents = []
+        sents.append(sent)
+        return sents
+    sent , dic = clean_sent(sent, combs)
+    comb_indexes = find_comb_indexes(sent)
+    sent, event_dic = clean_sent(sent, events, 60)
+    dic.update(event_dic)
+    words = word_tokenize(sent)
+    firsts = first_split(comb_indexes, words)
+    sents = complete_split(firsts)
     return replace_dic(dic, sents)
+    
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[333]:
+
+
+
+
+
+# In[334]:
+
+
+
+
+
+# In[338]:
+
+
+
+
+
+# In[356]:
+
+
+
+
+
+# In[372]:
+
+
+
 
 
 # In[ ]:
