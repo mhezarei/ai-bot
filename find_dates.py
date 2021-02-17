@@ -3,47 +3,57 @@ from dateparser.calendars.jalali import JalaliCalendar
 from unidecode import unidecode
 import dateparser
 import re
-import jdatetime
 
 
 def find_dates(sentence_lem):
     fa_dates = []
+    indexes = []
     sentence = find_dates_replace(sentence_lem)
     for regX in ["امروز", "دیروز", "فردا", "پارسال", "امسال",
-                 r"([\u0660-\u0669]|[\d])+[\s]روز[\s]پیش", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]پیش", r"([\u0660-\u0669]|[\d])+[\s]سال[\s]پیش",
-                 r"([\u0660-\u0669]|[\d])+[\s]روز[\s]بعد", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]بعد", r"([\u0660-\u0669]|[\d])+[\s]سال[\s]بعد"]:
+                 r"([\u0660-\u0669]|[\d])+[\s]روز[\s]پیش", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]پیش",
+                 r"([\u0660-\u0669]|[\d])+[\s]سال[\s]پیش",
+                 r"([\u0660-\u0669]|[\d])+[\s]روز[\s]بعد", r"([\u0660-\u0669]|[\d])+[\s]هفته[\s]بعد",
+                 r"([\u0660-\u0669]|[\d])+[\s]سال[\s]بعد"]:
         en_datetimes = [x.group() for x in re.finditer(regX, sentence)]
 
         # if re.search(regX, sentence) is not None:
         #     en_datetime = dateparser.parse(re.search(regX, sentence).group(0),
         #                                    settings={'TIMEZONE': '+0330'})
         for strDate in en_datetimes:
+            indexes.append(sentence_lem.find(strDate))
             en_datetime = dateparser.parse(strDate, settings={'TIMEZONE': '+0330'})
             fa_datetime = JalaliDate(en_datetime)
             fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
 
-
-
-
     # find dates like "18 اسفند"
     dates = [x.group() for x in re.finditer(r"\d+[\s][\u0600-\u06FF]+", sentence)]
     for i in range(len(dates)):
-        for per_month in ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'ابان', 'اذر', 'دی', 'بهمن', 'اسفند']:
+        for per_month in ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'ابان', 'اذر', 'دی', 'بهمن',
+                          'اسفند']:
             if per_month in dates[i]:
+                indexes.append(sentence_lem.find(dates[i]))
                 en_datetime = JalaliCalendar(dates[i]).get_date()
                 fa_datetime = JalaliDate(en_datetime.date_obj)
                 temp = fa_datetime.strftime('%Y-%m-%d')
-
-                year = fa_dates[i].split("-")[0]
+                if len(fa_dates) <= i:
+                    year = '1399'  # TODO - FIX FOR NEXT YEAR :D
+                else:
+                    year = fa_dates[i].split("-")[0]
                 month = temp.split("-")[1]
                 day = temp.split("-")[2]
+                if len(fa_dates) <= i:
+                    fa_dates.append(f"{year}-{month}-{day}")
+                else:
+                    fa_dates[i] = f"{year}-{month}-{day}"
 
-                fa_dates[i] = f"{year}-{month}-{day}"
-
+    if len(fa_dates) == 0:
+        en_datetime = dateparser.parse('امروز',
+                                       settings={'TIMEZONE': '+0330'})
+        fa_datetime = JalaliDate(en_datetime)
+        fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
     # find dates like "سال 99", "سال 1399"
     dates = [x.group() for x in re.finditer(r"((سال)|(کدام روز))[\s]\d+", sentence)]
     for i in range(len(dates)):
-
         splited = dates[i].split(" ")
         year = splited[len(splited) - 1]
 
@@ -57,17 +67,12 @@ def find_dates(sentence_lem):
 
         fa_dates[i] = f"{year}-{month}-{day}"
 
-    if len(fa_dates) == 0:
-        en_datetime = dateparser.parse('امروز',
-                                       settings={'TIMEZONE': '+0330'})
-        fa_datetime = JalaliDate(en_datetime)
-        fa_dates.append(fa_datetime.strftime('%Y-%m-%d'))
+    fa_dates = [x for _, x in sorted(zip(indexes, fa_dates))]
     print("dates : " + str(fa_dates))
     return fa_dates
 
 
 def find_dates_replace(sentence):
-
     sentence = sentence.replace('ابان', 'آبان')
     sentence = sentence.replace('اذر', 'آذر')
     sentence = sentence.replace('دیگر', 'بعد')

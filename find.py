@@ -1,18 +1,19 @@
 from __future__ import unicode_literals
+
+from find_calendar_types import find_calendar_types
 from find_cities import find_cities
 from find_dates import find_dates
 from find_events import find_events
 from find_religious_time import find_religious_time
 from find_time import find_date_time
+from find_weather_method import find_weather_method
 from pipeline_sentence import pipeline_sentence
 from tokens_in_sentence import find_tokens_in_sentence
-from find_calendar_types import find_calendar_types
-from find_weather import find_weather_method
 
 
 # If you don't have model -> Comment 7, 8, 23, 24 lines and Uncomment 27, 28, 29 lines
 
-def find(sentence_temp, model, tokenizer):
+def find(sentence_temp, model, tokenizer, all_events, all_event_keys):
     sentence = sentence_temp
     try:
         calender_types = find_calendar_types(sentence)
@@ -58,7 +59,7 @@ def find(sentence_temp, model, tokenizer):
         times = []
 
     try:
-        events, dates = find_events(sentence_temp, dates)
+        events, dates = find_events(sentence_temp, dates, all_events, all_event_keys)
     except Exception:
         # raise ValueError("find_events_dates Error!")
         events, dates = [], []

@@ -1,12 +1,14 @@
 import time
 
-from transformers import AutoTokenizer, AutoModelForTokenClassification
+from transformers import AutoTokenizer, AutoModelForTokenClassification, AutoConfig
 
-from ansewr_per_question import answer_per_question
+from answer_per_question import answer_per_question
 from deepmine import Deepmine
 from aryana import aryana
+from find_events_in_sentence import find_events_in_sentence
 from nevisa import nevisa
 from speechRec import google
+from find_time import reformat_date_time
 
 
 class BOT:
@@ -26,6 +28,7 @@ class BOT:
     '''
 
     def AIBOT(self, Question):
+        start = time.time()
         answer = {'type': [], 'city': [], 'date': [],
                   'time': [], 'religious_time': [], 'calendar_type': [],
                   'event': [], 'api_url': [], 'result': []}
@@ -33,24 +36,26 @@ class BOT:
                       'time': set(), 'religious_time': set(), 'calendar_type': set(),
                       'event': set(), 'api_url': set(), 'result': []}
 
-        # /var/www/AIBot/media/bert-base-parsbert-ner-uncased
+        Question = reformat_date_time(Question)           
 
+        # /var/www/AIBot/media/bert-base-parsbert-ner-uncased
         tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
         model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
-        Questions = Question.split(' و ')  # TODO
+        events, event_keys = find_events_in_sentence(Question)
+        Questions = Question.split(' . ')  # TODO
         for sentence in Questions:
-            q_answer = answer_per_question(sentence, model, tokenizer)
+            q_answer = answer_per_question(sentence, model, tokenizer, events, event_keys)
 
             for key in answer_set.keys():
                 if key == "type":
                     answer_set[key].add(q_answer[key])
                 elif key == "result":
-                    answer_set[key].append(q_answer[key])
+                    if not q_answer[key] == "":
+                        answer_set[key].append(q_answer[key])
                 else:
                     answer_set[key].update(q_answer[key])
         for key in answer.keys():
             answer[key] = list(answer_set[key])
-
         return answer
 
     '''

@@ -16,4 +16,8 @@ def find_religious_time(string):
     if not bool(set(religious_type).intersection(adhan_times_types)):
         if 'اذان' in string:
             religious_type.append('اذان')
+    indexes = []
+    for elem in religious_type :
+        indexes.append(string.find(elem))
+    religious_type = [x for _,x in sorted(zip(indexes,religious_type))]
     return religious_type

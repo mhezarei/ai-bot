@@ -221,7 +221,7 @@ def change_words(sentence):
         for key in capital_dictionary.keys():
             if key in sentence:
                 sentence = sentence.replace(key, capital_dictionary[key])
-    if "دبی" in sentence:
+    if " دبی " in sentence:
         if "شهر دبی" not in sentence:
             sentence = sentence.replace("دبی", "شهر دبی")
     return sentence

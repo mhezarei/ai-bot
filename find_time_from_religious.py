@@ -3,10 +3,13 @@ from utility import convert_date
 
 
 def find_time_from_religious(answer):
-    greg_date = convert_date(answer["date"][0], "shamsi",
-                             "greg")
-    rl = ReligiousTime(answer["religious_time"][0], answer["city"][0],
-                       greg_date)
-    res = rl.get_rel_timing()
-    print("res", res)
-    return str(res), rl.url
+    results = []
+    urls = []
+    for religious_time in answer["religious_time"]:
+        greg_date = convert_date(answer["date"][0], "shamsi",
+                                 "greg")
+        rl = ReligiousTime(religious_time, answer["city"][0],
+                           greg_date)
+        results.append(rl.get_rel_timing())
+        urls.append(rl.url)
+    return results, urls
