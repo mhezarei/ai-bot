@@ -25,11 +25,13 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
             answer["time"].extend(time)
         if not answer["time"]:
             hour = datetime.datetime.now().hour
-            if hour < 3:
+            if hour < 12:
                 answer["time"] = ["12:00"]
             else:
-                answer["time"] = str(datetime.datetime.now().hour) + ":" + str(datetime.datetime.now().minute)
-                print("time : " + answer["time"])
+                time = str(
+                    str(hour + 1).zfill(2) + ":" + str(datetime.datetime.now().minute).zfill(2))
+                answer["time"] = [time]
+                print("time : " + str(answer["time"]))
 
         try:
             if "اختلاف" in Question or "تفاوت" in Question:
