@@ -25,7 +25,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
             answer["time"].extend(time)
         if not answer["time"]:
             hour = datetime.datetime.now().hour
-            if hour < 12:
+            if hour < 3:
                 answer["time"] = ["12:00"]
             else:
                 answer["time"] = str(datetime.datetime.now().hour) + ":" + str(datetime.datetime.now().minute)
