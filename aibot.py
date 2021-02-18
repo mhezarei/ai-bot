@@ -2,6 +2,7 @@ import time
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, AutoConfig
 
+from split import split
 from answer_per_question import answer_per_question
 from deepmine import Deepmine
 from aryana import aryana
@@ -42,7 +43,8 @@ class BOT:
         tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
         model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
         events, event_keys = find_events_in_sentence(Question)
-        Questions = Question.split(' . ')  # TODO
+        Questions = split(Question, events)
+        print(str(Questions))
         for sentence in Questions:
             q_answer = answer_per_question(sentence, model, tokenizer, events, event_keys)
 

@@ -23,6 +23,14 @@ def find_events(sentence, dates, all_events, all_event_keys):
             if all_events[i] in sentence or all_event_keys[i] in sentence:
                 events.append(all_events[i])
                 event_keys.append(all_event_keys[i])
+        more_events = {
+            "عاشورا": "عاشورای حسینی",
+            "تاسوعا": "تاسوعای حسینی"
+        }
+        for key in more_events.keys():
+            if not more_events[key] in events and key in sentence:
+                events.append(more_events[key])
+                event_keys.append(more_events[key])
         new_dates = []
         if len(events) > 0 and len(dates) > 0:
             year = dates[0].split('-')[0]
