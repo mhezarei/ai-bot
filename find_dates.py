@@ -47,6 +47,7 @@ def find_dates(sentence_lem):
                     fa_dates[i] = f"{year}-{month}-{day}"
 
     if len(fa_dates) == 0:
+        indexes = [0]
         en_datetime = dateparser.parse('امروز',
                                        settings={'TIMEZONE': '+0330'})
         fa_datetime = JalaliDate(en_datetime)

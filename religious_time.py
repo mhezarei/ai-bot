@@ -24,7 +24,6 @@ class ReligiousTime:
 		self.base_url = "http://api.aladhan.com/v1/calendarByCity"
 		self.url = ""
 
-	
 	def send_request(self) -> dict:
 		# Gives us the religious timings
 		url = self.base_url + '?'

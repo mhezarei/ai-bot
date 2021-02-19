@@ -18,5 +18,13 @@ def find_events_in_sentence(sentence):
         elif important_events[i] in sentence:
             events.append(important_events[i])
             event_keys.append(important_events_key[i])
+    more_events = {
+        "عاشورا": "عاشورای حسینی",
+        "تاسوعا": "تاسوعای حسینی"
+    }
+    for key in more_events.keys():
+        if not more_events[key] in events and key in sentence:
+            events.append(more_events[key])
+            event_keys.append(more_events[key])
     print("all events : " + str(events))
     return events, event_keys

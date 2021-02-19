@@ -6,6 +6,7 @@ from learning import predict
 from mhr_time import Time
 from utility import convert_date
 from weather_difference import weather_difference
+import datetime
 
 
 def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
@@ -23,7 +24,14 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
             time, answer["api_url"] = find_time_from_religious(answer)
             answer["time"].extend(time)
         if not answer["time"]:
-            answer["time"] = ["12:00"]
+            hour = datetime.datetime.now().hour
+            if hour < 12:
+                answer["time"] = ["12:00"]
+            else:
+                time = str(
+                    str(hour + 1).zfill(2) + ":" + str(datetime.datetime.now().minute).zfill(2))
+                answer["time"] = [time]
+                print("time : " + str(answer["time"]))
 
         try:
             if "اختلاف" in Question or "تفاوت" in Question:
@@ -57,7 +65,10 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
 
             if answer["religious_time"]:
                 answer["time"] = []
-            answer["time"] = answer[:time_len]
+            if time_len == 0:
+                answer["time"] = []
+            else:
+                answer["time"] = answer[:time_len]
         except Exception:
             # raise ValueError("Type 1 Error!")
             pass
