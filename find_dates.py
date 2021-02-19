@@ -78,6 +78,7 @@ def find_dates_replace(sentence):
     sentence = sentence.replace('دیگر', 'بعد')
     sentence = sentence.replace('آینده', 'بعد')
     sentence = sentence.replace('قبل', 'پیش')
+    sentence = sentence.replace('گذشته', 'پیش')
     # replace numbers
     sentence = sentence.replace("یک ", "1 ")
     sentence = sentence.replace("دو ", "2 ")
@@ -133,4 +134,30 @@ def find_dates_replace(sentence):
 
     if not re.findall(r"([\u0660-\u0669]|[\d])+[\s]سال[\s]بعد", sentence):
         sentence = sentence.replace("سال بعد", "1 سال بعد")
+    return sentence
+
+def reformat_date(sentence):
+    """
+    Enhanced sentences contain: در چهار روز گذشته
+    """
+
+    sentence_temp = sentence
+    sentence_temp = find_dates_replace(sentence_temp)
+
+    dates = [x.group() for x in re.finditer(r"در ([\u0660-\u0669]|[\d])+[\s]روز[\s]بعد", sentence_temp)]
+    for date in dates:
+        number = date.split(' ')[1]
+        number = int(unidecode(number))
+        while number > 1:
+            number -= 1
+            sentence += f' {number} روز بعد'
+
+    dates = [x.group() for x in re.finditer(r"در ([\u0660-\u0669]|[\d])+[\s]روز[\s]پیش", sentence_temp)]
+    for date in dates:
+        number = date.split(' ')[1]
+        number = int(unidecode(number))
+        while number > 1:
+            number -= 1
+            sentence += f' {number} روز پیش'
+
     return sentence

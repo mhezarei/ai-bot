@@ -9,6 +9,7 @@ from find_events_in_sentence import find_events_in_sentence
 from nevisa import nevisa
 from speechRec import google
 from find_time import reformat_date_time
+from find_dates import reformat_date
 
 
 class BOT:
@@ -37,6 +38,7 @@ class BOT:
                       'event': set(), 'api_url': set(), 'result': []}
 
         Question = reformat_date_time(Question)           
+        Question = reformat_date(Question)
 
         # /var/www/AIBot/media/bert-base-parsbert-ner-uncased
         tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
