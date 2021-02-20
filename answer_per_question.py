@@ -4,7 +4,7 @@ from find_time_from_religious import find_time_from_religious
 from find_weather_from_city_date import find_weather_from_city_date
 from learning import predict
 from mhr_time import Time
-from output_sentences import religion_sentence
+from output_sentences import religion_sentence, time_sentence
 from utility import convert_date
 from weather_difference import weather_difference
 import datetime
@@ -91,7 +91,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
             answer["api_url"] = [t.url]
             answer["date"] = []
             answer["time"] = []
-            answer_sentence = religion_sentence(answer)
+            answer_sentence = time_sentence(answer)
         except Exception:
             # raise ValueError("Type 3 Error!")
             pass
