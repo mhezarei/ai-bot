@@ -11,6 +11,7 @@ WORD_SCORE = 1
 
 p = os.path.dirname(os.path.abspath(__file__))
 
+
 def get_sw(filename: str) -> list:
 	with open(filename, encoding="utf-8") as f:
 		sw = f.read().split('\n')
