@@ -11,7 +11,8 @@ from nevisa import nevisa
 from speechRec import google
 from find_time import reformat_date_time
 from find_dates import reformat_date
-
+#TODO
+from playsound import playsound
 
 class BOT:
     def __init__(self):
@@ -73,6 +74,7 @@ class BOT:
         print(f"Runtime of the text-to-speech API is {end - start}")
         with open("response.wav", mode='bw') as f:
             f.write(response.content)
+        playsound('response.wav')
         # TODO
         return answer, final_answer
 

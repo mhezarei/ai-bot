@@ -8,9 +8,9 @@ def main():
 
     my_bot = BOT()
 
-    sentence = "اذان ظهر فردای تهران سال ۱۴۰۰ چه ساعتی است ؟"
+    sentence = "دمای هوای تهران امروز چقدر است؟ "
     answer, answer_sen = my_bot.AIBOT(sentence)
-
+    print(answer)
     # answer = my_bot.aibot('input.wav')
 
     # print(answer)

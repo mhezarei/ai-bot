@@ -4,7 +4,7 @@ from find_time_from_religious import find_time_from_religious
 from find_weather_from_city_date import find_weather_from_city_date
 from learning import predict
 from mhr_time import Time
-from output_sentences import religion_sentence, time_sentence
+from output_sentences import religion_sentence, time_sentence, date_sentence, unknown_sentence
 from utility import convert_date
 from weather_difference import weather_difference
 import datetime
@@ -30,6 +30,8 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
             if hour < 12:
                 answer["time"] = ["12:00"]
             else:
+                if (hour + 1) == 24:
+                    hour = 0
                 time = str(
                     str(hour + 1).zfill(2) + ":" + str(datetime.datetime.now().minute).zfill(2))
                 answer["time"] = [time]
@@ -117,6 +119,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                                                         "shamsi", "greg")
                 elif answer["date"]:
                     answer["result"] = answer["date"][0]
+                answer_sentence = date_sentence(answer)
         except Exception:
             # raise ValueError("Type 4 Error!")
             pass
@@ -124,5 +127,6 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
         answer = {'type': '-1', 'city': [], 'date': [],
                   'time': [], 'religious_time': [], 'calendar_type': [],
                   'event': [], 'api_url': [], 'result': ''}
+        answer_sentence = unknown_sentence()
 
     return answer, answer_sentence

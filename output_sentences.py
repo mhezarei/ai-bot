@@ -1,6 +1,8 @@
 import random
 import num2fawords
 
+from capitals import capital_to_country
+
 
 def convert_month(month: int) -> str:
     return ["فروردین", "اردی‌بهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر",
@@ -16,7 +18,7 @@ def unknown_sentence() -> str:
 
 
 def weather_sentence(result: dict, n_days: str = "") -> str:
-    city = result["city"][0]
+    city = city_random(result["city"][0])
     date = "در تاریخ " + date_from_str(result["date"][0])
     time = result["time"][0] if result["time"] else None
     time_repl = date if n_days == "" else n_days
@@ -49,7 +51,7 @@ def weather_sentence(result: dict, n_days: str = "") -> str:
 
 
 def weather_logical_sentence(result: dict, logic: str, n_days: str = "") -> str:
-    city = result["city"][0]
+    city = city_random(result["city"][0])
     date = "در تاریخ " + date_from_str(result["date"][0])
     time = result["time"][0] if result["time"] else None
     time_repl = date if n_days == "" else n_days
@@ -73,17 +75,17 @@ def religion_sentence(result: dict) -> str:
     city = result["city"][0]
     date = date_from_str(result["date"][0])
     return random.choice([
-        f"{rel_time} به افق شهر {city} در تاریخِ {date_from_str(date)}، ساعت {result['result']} است",
+        f"{rel_time} به افق شهر {city} در تاریخِ {date}، ساعت {result['result']} است",
     ])
 
 
 def time_sentence(result: dict, eq_string: str = None) -> str:
-    city = "شهر " + result["city"][0]
+    city = city_random(result["city"][0])
     city_eq = city if eq_string is None else random.choice([eq_string, city])
     return random.choice([
         f"در {city_eq} الان ساعت {result['result']} است",
         f"ساعت فعلی {city_eq} در حال حاضر {result['result']} است",
-        f"ساعت فعلی {city_eq} فلان، {result['result']} است",
+        f"ساعت فعلی {city_eq} ، {result['result']} است",
     ])
 
 
@@ -123,3 +125,18 @@ def date_from_str(date_str):
     else:
         day = days[0]
     return day + "ِ  " + month + "ِ " + " سالِ " + year
+
+
+def city_random(city):
+    return_list = [
+        f"{city}",
+        f"شهر {city}"]
+    country_name = capital_to_country(city)
+    print("country name : " + country_name)
+    if not country_name == "":
+        country_name.split(" ")
+        return_list.append("پایتخت " + country_name[1])
+        return_list.append("مرکز " + country_name[1])
+        return_list.append("مرکز کشور " + country_name[1])
+        return_list.append("پایتخت کشور " + country_name[1])
+    return random.choice(return_list)
