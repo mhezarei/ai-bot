@@ -38,7 +38,7 @@ class BOT:
                       'time': set(), 'religious_time': set(), 'calendar_type': set(),
                       'event': set(), 'api_url': set(), 'result': []}
 
-        Question = reformat_date_time(Question)           
+        Question = reformat_date_time(Question)
         Question = reformat_date(Question)
 
         # /var/www/AIBot/media/bert-base-parsbert-ner-uncased
@@ -47,9 +47,13 @@ class BOT:
         events, event_keys = find_events_in_sentence(Question)
         Questions = split(Question, events)
         print(str(Questions))
+        final_answer = ""
         for sentence in Questions:
-            q_answer = answer_per_question(sentence, model, tokenizer, events, event_keys)
-
+            q_answer, answer_sen = answer_per_question(sentence, model, tokenizer, events, event_keys)
+            if final_answer == "":
+                final_answer = answer_sen
+            else:
+                final_answer = final_answer + " و " + answer_sen
             for key in answer_set.keys():
                 if key == "type":
                     answer_set[key].add(q_answer[key])
@@ -60,7 +64,17 @@ class BOT:
                     answer_set[key].update(q_answer[key])
         for key in answer.keys():
             answer[key] = list(answer_set[key])
-        return answer
+        final_answer = final_answer + " ."
+        # TODO extra part
+        print("generated_sentence : " + final_answer)
+        start = time.time()
+        response = aryana(final_answer)
+        end = time.time()
+        print(f"Runtime of the text-to-speech API is {end - start}")
+        with open("response.wav", mode='bw') as f:
+            f.write(response.content)
+        # TODO
+        return answer, final_answer
 
     '''
     This method takes an string as input, the string contains the address of .wav file.
@@ -100,11 +114,10 @@ class BOT:
         end = time.time()
         print(f"Runtime of the speechRecognition API is {end - start}")
 
-        answer = self.AIBOT(text)
-
+        answer, generated_sentence = self.AIBOT(text)
+        print("generated_sentence : " + generated_sentence)
         start = time.time()
 
-        generated_sentence = "این یک جمله‌ای صرفا برای امتحان کردن است"
         response = aryana(generated_sentence)
 
         end = time.time()

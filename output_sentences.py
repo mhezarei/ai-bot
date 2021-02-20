@@ -1,15 +1,11 @@
 import random
+import num2fawords
 
 
 def convert_month(month: int) -> str:
     return ["فروردین", "اردی‌بهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر",
             "آبان", "آذر", "دی", "بهمن", "اسفند"][month - 1]
 
-
-def date_eq(date: str) -> str:
-    y, m, d = date.split('-')[0], date.split('-')[1], date.split('-')[2]
-    return d + ' ماه ' + convert_month(int(m)) + ' سال ' + y
-    
 
 def unknown_sentence() -> str:
     return random.choice([
@@ -21,7 +17,7 @@ def unknown_sentence() -> str:
 
 def weather_sentence(result: dict, n_days: str = "") -> str:
     city = result["city"][0]
-    date = "در تاریخ " + date_eq(result["date"][0])
+    date = "در تاریخ " + date_from_str(result["date"][0])
     time = result["time"][0] if result["time"] else None
     time_repl = date if n_days == "" else n_days
     if time is None:
@@ -54,7 +50,7 @@ def weather_sentence(result: dict, n_days: str = "") -> str:
 
 def weather_logical_sentence(result: dict, logic: str, n_days: str = "") -> str:
     city = result["city"][0]
-    date = "در تاریخ " + date_eq(result["date"][0])
+    date = "در تاریخ " + date_from_str(result["date"][0])
     time = result["time"][0] if result["time"] else None
     time_repl = date if n_days == "" else n_days
     logic += "دمای هوای شهر"
@@ -75,9 +71,9 @@ def weather_logical_sentence(result: dict, logic: str, n_days: str = "") -> str:
 def religion_sentence(result: dict) -> str:
     rel_time = result["religious_time"][0]
     city = result["city"][0]
-    date = date_eq(result["date"][0])
+    date = date_from_str(result["date"][0])
     return random.choice([
-        f"{rel_time} به افق شهر {city} در تاریخ {date}، ساعت {result['result']} است",
+        f"{rel_time} به افق شهر {city} در تاریخِ {date_from_str(date)}، ساعت {result['result']} است",
     ])
 
 
@@ -93,7 +89,7 @@ def time_sentence(result: dict, eq_string: str = None) -> str:
 
 def date_sentence(result: dict) -> str:
     event = result["event"][0] if result["event"] else None
-    date = date_eq(result["date"][0]) if result["date"] else None
+    date = date_from_str(result["date"][0]) if result["date"] else None
     cal_type = result["calender_type"][0] if result["calender_type"] else None
     if event is not None:
         return random.choice([
@@ -108,3 +104,22 @@ def date_sentence(result: dict) -> str:
             return random.choice([
                 f"تاریخ شمسی {date} معادل تاریخ {result['result']} در تقویم {cal_type} است",
             ])
+
+
+def date_from_str(date_str):
+    dates = date_str.split('-')
+    if int(dates[0]) > 1399:
+        years = num2fawords.words(dates[0]).split(" و ")
+        year = ""
+        for i in range(len(years) - 1):
+            year = year + years[i] + "و" + " "
+        year = year + years[-1] + " "
+    else:
+        year = dates[0][2:]
+    month = convert_month(int(dates[1]))
+    days = num2fawords.ordinal_words(dates[2]).split(" و ")
+    if len(days) == 2:
+        day = days[0] + "و" + " " + days[1]
+    else:
+        day = days[0]
+    return day + "ِ  " + month + "ِ " + " سالِ " + year

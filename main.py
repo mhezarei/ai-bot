@@ -8,12 +8,13 @@ def main():
 
     my_bot = BOT()
 
-    sentence = "سردترین اذان ظهر تهران در چهار روز گذشته کدام روز است؟"
-    answer = my_bot.AIBOT(sentence)
+    sentence = "اذان ظهر فردای تهران سال ۱۴۰۰ چه ساعتی است ؟"
+    answer, answer_sen = my_bot.AIBOT(sentence)
 
     # answer = my_bot.aibot('input.wav')
 
-    print(answer)
+    # print(answer)
+    # print("final answer : " + answer_sen)
 
     end = time.time()
     print(f"Runtime of the program is {end - start}")
