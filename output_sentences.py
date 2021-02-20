@@ -6,6 +6,11 @@ def convert_month(month: int) -> str:
             "آبان", "آذر", "دی", "بهمن", "اسفند"][month - 1]
 
 
+def date_eq(date: str) -> str:
+    y, m, d = date.split('-')[0], date.split('-')[1], date.split('-')[2]
+    return d + ' ماه ' + convert_month(int(m)) + ' سال ' + y
+    
+
 def unknown_sentence() -> str:
     return random.choice([
         "سوال مطرح شده خارج از حیطه ی سوالات مسابقه است",
@@ -16,7 +21,7 @@ def unknown_sentence() -> str:
 
 def weather_sentence(result: dict, n_days: str = "") -> str:
     city = result["city"][0]
-    date = "در تاریخ " + result["date"][0]
+    date = "در تاریخ " + date_eq(result["date"][0])
     time = result["time"][0] if result["time"] else None
     time_repl = date if n_days == "" else n_days
     if time is None:
@@ -49,7 +54,7 @@ def weather_sentence(result: dict, n_days: str = "") -> str:
 
 def weather_logical_sentence(result: dict, logic: str, n_days: str = "") -> str:
     city = result["city"][0]
-    date = "در تاریخ " + result["date"][0]
+    date = "در تاریخ " + date_eq(result["date"][0])
     time = result["time"][0] if result["time"] else None
     time_repl = date if n_days == "" else n_days
     logic += "دمای هوای شهر"
@@ -70,7 +75,7 @@ def weather_logical_sentence(result: dict, logic: str, n_days: str = "") -> str:
 def religion_sentence(result: dict) -> str:
     rel_time = result["religious_time"][0]
     city = result["city"][0]
-    date = result["date"][0]
+    date = date_eq(result["date"][0])
     return random.choice([
         f"{rel_time} به افق شهر {city} در تاریخ {date}، ساعت {result['result']} است",
     ])
@@ -88,7 +93,7 @@ def time_sentence(result: dict, eq_string: str = None) -> str:
 
 def date_sentence(result: dict) -> str:
     event = result["event"][0] if result["event"] else None
-    date = result["date"][0] if result["date"] else None
+    date = date_eq(result["date"][0]) if result["date"] else None
     cal_type = result["calender_type"][0] if result["calender_type"] else None
     if event is not None:
         return random.choice([
