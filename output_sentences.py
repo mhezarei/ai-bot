@@ -1,4 +1,5 @@
 import random
+import num2fawords
 
 
 def convert_month(month: int) -> str:
@@ -72,7 +73,7 @@ def religion_sentence(result: dict) -> str:
     city = result["city"][0]
     date = result["date"][0]
     return random.choice([
-        f"{rel_time} به افق شهر {city} در تاریخ {date}، ساعت {result['result']} است",
+        f"{rel_time} به افق شهر {city} در تاریخِ {date_from_str(date)}، ساعت {result['result']} است",
     ])
 
 
@@ -103,3 +104,22 @@ def date_sentence(result: dict) -> str:
             return random.choice([
                 f"تاریخ شمسی {date} معادل تاریخ {result['result']} در تقویم {cal_type} است",
             ])
+
+
+def date_from_str(date_str):
+    dates = date_str.split('-')
+    if int(dates[0]) > 1399:
+        years = num2fawords.words(dates[0]).split(" و ")
+        year = ""
+        for i in range(len(years) - 1):
+            year = year + years[i] + "و" + " "
+        year = year + years[-1] + " "
+    else:
+        year = dates[0][2:]
+    month = convert_month(int(dates[1]))
+    days = num2fawords.ordinal_words(dates[2]).split(" و ")
+    if len(days) == 2:
+        day = days[0] + "و" + " " + days[1]
+    else:
+        day = days[0]
+    return day + "ِ  " + month + "ِ " + " سالِ " + year
