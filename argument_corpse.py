@@ -12,9 +12,7 @@ with open("used_combs.txt") as f:
     temp = f.read().split('=')
     ret = []
     for t in temp:
-        h = [w for w in t.split('\n') if w != '']
-        for w in h:
-            ret += [s for s in w.split(' ') if s != '' and s not in sw]
+        ret += [w for w in t.split('\n') if w != '' and w not in sw]
     corpse += ret
 
 with open("used_words.txt") as f:
@@ -27,17 +25,20 @@ with open("used_words.txt") as f:
 # events
 df = pd.read_csv("shamsi_events.csv", encoding="utf-8")
 events = list(set(df["event"].tolist()))
-clean = []
-for e in events:
-    s = e
-    for c in unused_chars:
-        s = s.replace(c, ' ')
-    clean.append(s)
-clean2 = []
-for e in clean:
-    clean2 = clean2 + [w for w in e.split(' ') if w != '']
-clean2 = list(set(clean2))
-corpse += clean2
+# whole events
+corpse += list(set(events))
+# splitting words
+# clean = []
+# for e in events:
+#     s = e
+#     for c in unused_chars:
+#         s = s.replace(c, ' ')
+#     clean.append(s)
+# clean2 = []
+# for e in clean:
+#     clean2 = clean2 + [w for w in e.split(' ') if w != '']
+# clean2 = list(set(clean2))
+# corpse += clean2
 
 # countries
 df = pd.read_csv("IP2LOCATION-COUNTRY-MULTILINGUAL.CSV",
@@ -74,7 +75,7 @@ corpse += new
 
 
 # PLEASE DO NOT RUN THIS AS IT WILL APPEND THE DATA TO THE CORPSE FILE
-# corpse = list(set(corpse))
-# with open("argument_corpse.txt", "a+") as f:
-#     for w in corpse:
-#         f.write(w + '\n')
+corpse = list(set(corpse))
+with open("argument_corpse.txt", "a+") as f:
+    for w in corpse:
+        f.write(w + '\n')
