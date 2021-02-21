@@ -1,5 +1,9 @@
+from datetime import datetime
 import random
+
+import dateparser
 import num2fawords
+from persiantools.jdatetime import JalaliDate
 
 from capitals import capital_to_country
 
@@ -7,6 +11,16 @@ from capitals import capital_to_country
 def convert_month(month: int) -> str:
     return ["فروردین", "اردی‌بهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر",
             "آبان", "آذر", "دی", "بهمن", "اسفند"][month - 1]
+
+
+def convert_month_hijri(month: int) -> str:
+    return ["محرم", "صفر", "ربیع‌الاَوَل", "ربیع‌الثانی", "جمادی‌الاول", "جمادی‌الثانی", "رجب",
+            "شعبان", "رمضان", "شوال", "ذیعقده", "ذیحجه"][month - 1]
+
+
+def convert_month_georgian(month: int) -> str:
+    return ["ژانویه", "فوریه", "مارس", "آپریل", "می", "ژوئن", "جولای", "آگوست",
+            "سپتامبر", "اکتبر", "نوامبر", "دسامبر"][month - 1]
 
 
 def unknown_sentence() -> str:
@@ -110,10 +124,21 @@ def date_sentence(result: dict) -> str:
                 f"مناسبتِ روزِ {date_str}، {result['result']} است",
             ])
         else:
-            # TODO calendars types
-            return random.choice([
-                f"تاریخِ شمسیِ {date_str} معادلِ تاریخِ {result['result']} در تقویم {cal_type} است",
-            ])
+
+            if cal_type == "شمسی":
+                # TODO calendars types
+                return random.choice([
+                    f"تاریخِ {choose_date(result['result'])} معادلِ تاریخِ {date_from_str(result['result'])} در تقویم {cal_type} است",
+                    f"تاریخِ مدنظرِ شما معادلِ {date_from_str(result['result'])} است",
+                ])
+            elif cal_type == "قمری" or cal_type == "هجری":
+                return random.choice([
+                    f"تاریخِ شمسیِ {date_str} معادلِ تاریخِ {date_from_str_hijri(result['result'])} در تقویم {cal_type} است",
+                ])
+            elif cal_type == "میلادی":
+                return random.choice([
+                    f"تاریخِ شمسیِ {date_str} معادلِ تاریخِ {result['result']} در تقویم {cal_type} است",
+                ])
 
 
 def date_from_str(date_str):
@@ -155,7 +180,62 @@ def convert_year(year):
         year = ""
         for i in range(len(years) - 1):
             year = year + years[i] + "ُ" + " "
-            year = year + years[-1] + " "
+        year = year + years[-1] + " "
     else:
         year = year[2:]
     return year
+
+
+def date_from_str_hijri(date_str):
+    dates = date_str.split('-')
+    year = convert_year(dates[0])
+    month = convert_month_hijri(int(dates[1]))
+    day = convert_day(dates[2])
+    return day + "ِ  " + month + "ِ " + " سالِ " + year
+
+
+def date_from_str_georgian(date_str):
+    dates = date_str.split('-')
+    year = convert_year(dates[0])
+    month = convert_month_georgian(int(dates[1]))
+    day = convert_day(dates[2])
+    return day + "ِ  " + month + "ِ " + " سالِ " + year
+
+
+def choose_date(date_str):
+    relative_date = relative_day(date_str)
+    if relative_date == "":
+        return date_from_str(date_str)
+    else:
+        return random.choice([date_from_str(date_str), relative_date, relative_date])
+
+
+def relative_day(date_str):
+    en_datetime = dateparser.parse('امروز',
+                                   settings={'TIMEZONE': '+0330'})
+    naive_dt = JalaliDate(en_datetime)
+    d1 = datetime.strptime(date_str, "%Y-%m-%d")
+    print(naive_dt)
+    print(d1)
+    difference_days = naive_dt.day - d1.day
+    return {
+        -30: random.choice([f'ماه {previous_word()}']),
+        -14: random.choice([f'دو هقته‌ي {previous_word()}']),
+        -7: random.choice([f'هقته‌ي {previous_word()}', f'یک هقته‌ي {previous_word()}']),
+        -2: random.choice(['پریروز', f'دو روزِ {previous_word()}']),
+        -1: random.choice(['دیروز', f'روزِ {previous_word()}']),
+        0: random.choice(['امروز']),
+        1: random.choice(['فردا', f'روزِ {next_word()}']),
+        2: random.choice(['پس‌فردا', f'دو روزِ {next_word()}']),
+        7: random.choice([f'هقته‌‌ي {next_word()}', f'یک هقته‌ی {next_word()}']),
+        14: random.choice([f'دو هقته‌ي {next_word()}']),
+        30: random.choice([f'ماهِ {next_word()}']),
+    }.get(difference_days, '')
+
+
+def next_word():
+    return random.choice(['آینده', 'بعد'])
+
+
+def previous_word():
+    return random.choice(['قبل', 'گذشته'])

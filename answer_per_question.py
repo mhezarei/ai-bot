@@ -124,7 +124,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                     if target == "شمسی":
                         answer["result"] = convert_date(answer["date"][0],
                                                         "shamsi", "shamsi")
-                    elif target == "قمری":
+                    elif target == "قمری" or target == "هجری":
                         answer["result"] = convert_date(answer["date"][0],
                                                         "shamsi", "hijri")
                     elif target == "میلادی":
