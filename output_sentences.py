@@ -91,39 +91,36 @@ def time_sentence(result: dict, eq_string: str = None) -> str:
 
 def date_sentence(result: dict) -> str:
     event = result["event"][0] if result["event"] else None
-    date = date_from_str(result["date"][0]) if result["date"] else None
-    cal_type = result["calender_type"][0] if result["calender_type"] else None
+    if result["date"]:
+        date_str = date_from_str(result["date"][0])
+    else:
+        date_str = None
+    if result["calendar_type"]:
+        cal_type = result["calendar_type"][0]
+    else:
+        cal_type = None
+
     if event is not None:
         return random.choice([
-            f"در سال {result['result'].split('-')[0]} مناسبت {event} در روز {result['result'].split('-')[2]} و ماه {result['result'].split('-')[1]} است",
+            f"در سالِ {convert_year(result['result'].split('-')[0])} مناسبت {event} در روزِ {convert_day(result['result'].split('-')[2])} ماهِ {convert_month(int(result['result'].split('-')[1]))} است",
         ])
     else:
         if len(result["result"].split('-')) != 3:
             return random.choice([
-                f"مناسبت روز {date.split('-')[2]} از ماه {date.split('-')[1]} از سال {date.split('-')[0]}، {result['result']} است",
+                f"مناسبتِ روزِ {date_str}، {result['result']} است",
             ])
         else:
+            # TODO calendars types
             return random.choice([
-                f"تاریخ شمسی {date} معادل تاریخ {result['result']} در تقویم {cal_type} است",
+                f"تاریخِ شمسیِ {date_str} معادلِ تاریخِ {result['result']} در تقویم {cal_type} است",
             ])
 
 
 def date_from_str(date_str):
     dates = date_str.split('-')
-    if int(dates[0]) > 1399:
-        years = num2fawords.words(dates[0]).split(" و ")
-        year = ""
-        for i in range(len(years) - 1):
-            year = year + years[i] + "و" + " "
-        year = year + years[-1] + " "
-    else:
-        year = dates[0][2:]
+    year = convert_year(dates[0])
     month = convert_month(int(dates[1]))
-    days = num2fawords.ordinal_words(dates[2]).split(" و ")
-    if len(days) == 2:
-        day = days[0] + "و" + " " + days[1]
-    else:
-        day = days[0]
+    day = convert_day(dates[2])
     return day + "ِ  " + month + "ِ " + " سالِ " + year
 
 
@@ -132,11 +129,33 @@ def city_random(city):
         f"{city}",
         f"شهر {city}"]
     country_name = capital_to_country(city)
-    print("country name : " + country_name)
     if not country_name == "":
-        country_name.split(" ")
+        country_name = country_name.split(" ")
         return_list.append("پایتخت " + country_name[1])
         return_list.append("مرکز " + country_name[1])
         return_list.append("مرکز کشور " + country_name[1])
         return_list.append("پایتخت کشور " + country_name[1])
     return random.choice(return_list)
+
+
+def convert_day(day):
+    day = int(day)
+    days = num2fawords.ordinal_words(day).split(" و ")
+    if len(days) == 2:
+        day = days[0] + "و" + " " + days[1]
+    else:
+        day = days[0]
+    return day
+
+
+def convert_year(year):
+    year_int = int(year)
+    if year_int > 1399:
+        years = num2fawords.words(year_int).split(" و ")
+        year = ""
+        for i in range(len(years) - 1):
+            year = year + years[i] + "ُ" + " "
+            year = year + years[-1] + " "
+    else:
+        year = year[2:]
+    return year

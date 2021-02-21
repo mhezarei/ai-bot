@@ -4,7 +4,7 @@ from find_time_from_religious import find_time_from_religious
 from find_weather_from_city_date import find_weather_from_city_date
 from learning import predict
 from mhr_time import Time
-from output_sentences import religion_sentence, time_sentence, date_sentence, unknown_sentence
+from output_sentences import religion_sentence, time_sentence, date_sentence, unknown_sentence, weather_sentence
 from utility import convert_date
 from weather_difference import weather_difference
 import datetime
@@ -38,10 +38,12 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                 print("time : " + str(answer["time"]))
 
         try:
+            answer_mode = 0
             if "اختلاف" in Question or "تفاوت" in Question:
                 temps, urls = weather_difference(Question, answer, ' و ')
                 print(str(temps[0]) + "      ---    " + str(temps[1]))
                 temp = round(abs(temps[1] - temps[0]), 2)
+                answer_mode = 1
             elif "سردتر " in Question or "سرد تر " in Question:
                 temps, urls = weather_difference(Question, answer, ' یا ')
                 print(str(temps[0]) + "      ---    " + str(temps[1]))
@@ -49,6 +51,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                     temp = find_fit_word(answer, True)
                 else:
                     temp = find_fit_word(answer, False)
+                answer_mode = 2
             elif "گرم‌تر " in Question or "گرمتر " in Question or "گرم تر " in Question:
                 temps, urls = weather_difference(Question, answer, ' یا ')
                 print(str(temps[0]) + "      ---    " + str(temps[1]))
@@ -56,11 +59,13 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                     temp = find_fit_word(answer, True)
                 else:
                     temp = find_fit_word(answer, False)
+                answer_mode = 3
             else:
                 greg_date = convert_date(answer["date"][0], "shamsi",
                                          "greg") + " " + answer["time"][0]
                 temp, cond, url = find_weather_from_city_date(Question, answer["city"][0], greg_date)
                 urls = [url]
+                answer_mode = 4
             answer["api_url"].extend(urls)
             if method == "temp":
                 answer["result"] = str(temp)
@@ -73,6 +78,14 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                 answer["time"] = []
             else:
                 answer["time"] = answer[:time_len]
+            if answer_mode == 0:
+                pass
+            elif answer_mode == 1:
+                pass
+            elif answer_mode == 2:
+                pass
+            elif answer_mode == 3:
+                pass
         except Exception:
             # raise ValueError("Type 1 Error!")
             pass
@@ -102,7 +115,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
         try:
             answer["api_url"] = ["https://www.time.ir/"]
             if 'مناسبت' in Question:
-                answer["result"] = answer["event"]
+                answer["result"] = answer["event"][0]
                 answer["event"] = []
             else:
                 if answer["calendar_type"] and answer["date"]:
@@ -119,7 +132,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                                                         "shamsi", "greg")
                 elif answer["date"]:
                     answer["result"] = answer["date"][0]
-                answer_sentence = date_sentence(answer)
+            answer_sentence = date_sentence(answer)
         except Exception:
             # raise ValueError("Type 4 Error!")
             pass

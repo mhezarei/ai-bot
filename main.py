@@ -8,7 +8,7 @@ def main():
 
     my_bot = BOT()
 
-    sentence = "دمای هوای تهران امروز چقدر است؟ "
+    sentence = " زادروز ریچارد استالمن، یک آمریکایی طرفدار آزادی نرم‌افزار و برنامه‌نویس کامپیوتر، بنیانگذار بنیاد نرم‌افزارهای آزاد"
     answer, answer_sen = my_bot.AIBOT(sentence)
     print(answer)
     # answer = my_bot.aibot('input.wav')
