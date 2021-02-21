@@ -51,16 +51,15 @@ def correct(word: str) -> str:
         if res[r] == 0:
             return r
     for i in range(1, MAX_DIFF):
-        close_words = [w for w, v in res.items() if v == i]
+        close_words = [w for w, v in res.items() if v == i and len(word) == len(w)]
         if len(close_words) == 1:
             return close_words[0]
         else:
             for w in close_words:
-                if len(w) == len(word):
-                    diff_letter = [(i, c) for i, c in enumerate(w) if c != word[i]][0]
-                    close_p = close_pronunciation(diff_letter[1])
-                    if close_p and word[diff_letter[0]] in close_p:
-                        return w
+                diff_letter = [(i, c) for i, c in enumerate(w) if c != word[i]][0]
+                close_p = close_pronunciation(diff_letter[1])
+                if close_p and word[diff_letter[0]] in close_p:
+                    return w
                 
 
 print(correct("ادان صبح"))
