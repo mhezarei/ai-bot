@@ -46,7 +46,8 @@ class BOT:
         tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
         model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
         events, event_keys = find_events_in_sentence(Question)
-        Questions = split(Question, events)
+        # Questions = split(Question, events)
+        Questions = Question.split(' . ')
         print(str(Questions))
         final_answer = ""
         for sentence in Questions:

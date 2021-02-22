@@ -34,31 +34,34 @@ def unknown_sentence() -> str:
 def weather_sentence(result: dict, logic='') -> str:
     city = city_random(result["city"][0])
     date = choose_date(result['date'][0])
-    time = result["time"][0] if result["time"] else None
+    time1 = result["time"][0] if result["time"] else None
+    time = result["religious_time"][0] if result["religious_time"] else time1
     if time is None:
         if 'ی' not in result["result"]:
-            list_ret = [f"{logic} دمای هوایِ {city}، {date}، {result['result']} درجه است"]
+            list_ret = [f"{logic} دمای هوایِ {city}، {date}، {result['result']} درجه {generate_verb()}"]
             if logic == '':
-                list_ret.extend([f"{date}، میزانِ دمای {city} برابر با {result['result']} درجه‌ ی سانتی‌گراد است",
-                                 f"درجه ی حرارتِ {city}، {date} برابر با {result['result']} درجه ‌یِ سانتی‌گراد است"])
+                list_ret.extend(
+                    [f"{date}، میزانِ دمای {city} برابر با {result['result']} درجه‌ ی سانتی‌گراد {generate_verb()}",
+                     f"درجه ی حرارتِ {city}، {date} برابر با {result['result']} درجه ‌یِ سانتی‌گراد {generate_verb()}"])
             return random.choice(list_ret)
         else:
             return random.choice([
-                f"وضعیتِ آب و هوایی {city}، {date}، به صورتِ {result['result']} است",
+                f"وضعیتِ آب و هوایی {city}، {date}، به صورتِ {result['result']} {generate_verb()}",
                 f"ساکنینِ {city}، {date}، هوایی ، {result['result']} را تجربه می‌کنند",
                 f"{date} ، {city}، هوایی {result['result']} دارد",
             ])
     else:
         if 'ی' not in result["result"]:
-            list_ret = [f"{logic} دمایِ هوایِِ {city}، {date} در ساعتِ {time} برابر با {result['result']} درجه است"]
+            list_ret = [
+                f"{logic} دمایِ هوایِِ {city}، {date} در ساعتِ {time} برابر با {result['result']} درجه {generate_verb()}"]
             if logic == '':
                 list_ret.extend([
-                    f"{date} در ساعتِ {time} میزانِ دمای  {city} برابر با {result['result']} درجه‌ ی سانتی‌گراد است",
-                    f"درجه ‌ی حرارتِِ {city}، {date} در ساعتِ {time} برابر با {result['result']} درجه ‌ی سانتی‌گراد است", ])
+                    f"{date} در ساعتِ {time} ، میزانِ دمای  {city} برابر با {result['result']} درجه‌ ی سانتی‌گراد {generate_verb()}",
+                    f"درجه ‌ی حرارتِِ {city}، {date} در ساعتِ {time} ، برابر با {result['result']} درجه ‌ی سانتی‌گراد {generate_verb()}", ])
             return random.choice(list_ret)
         else:
             return random.choice([
-                f"وضعیتِ آب و هوایی {city}، {date} در ساعتِ {time} به صورتِ {result['result']} است",
+                f"وضعیتِ آب و هوایی {city}، {date} در ساعتِ {time} به صورتِ {result['result']} {generate_verb()}",
                 f"ساکنینِ {city}، {date} در ساعتِ {time} هوایی {result['result']} را تجربه می‌کنند",
                 f"{date} در ساعتِ ، {time} ، {city} هوایی {result['result']} دارد",
             ])
@@ -88,14 +91,14 @@ def weather_logical_sentence(answer: dict, logic1='', logic2='', logic_mode='', 
         times[1] = ''
     if logic_mode == 'اختلاف':
         if dates[1] == '':
-            return_sen = f"اختلافِ {logics[0]} دمای هوای {cities[0]}،{times[0]} و {logics[1]} دمای {cities[1]}، {dates[1]}،{times[1]}  برابر با {answer['result']} است "
+            return_sen = f"اختلافِ {logics[0]} دمای هوای {cities[0]}،{times[0]} و {logics[1]} دمای {cities[1]}، {dates[1]}،{times[1]}  برابر با {answer['result']} {generate_verb()} "
         else:
-            return_sen = f"اختلافِ {logics[0]} دمای هوای {cities[0]}، {dates[0]}،{times[0]} و {logics[1]} دمای {cities[1]}، {dates[1]}،{times[1]}  برابر با {answer['result']} است "
+            return_sen = f"اختلافِ {logics[0]} دمای هوای {cities[0]}، {dates[0]}،{times[0]} و {logics[1]} دمای {cities[1]}، {dates[1]}،{times[1]}  برابر با {answer['result']} {generate_verb()} "
     if logic_mode == 'سردتر' or logic_mode == 'گرمتر':
         if dates[answer_number] == '':
-            return_sen = f"ِ{logics[answer_number]} دمای هوای {cities[answer_number]}،{times[answer_number]}  {logic_mode} از {logics[other_answer_num]} دمای {cities[other_answer_num]}، {dates[other_answer_num]}،{times[other_answer_num]} است"
+            return_sen = f"ِ{logics[answer_number]} دمای هوای {cities[answer_number]}،{times[answer_number]}  {logic_mode} از {logics[other_answer_num]} دمای {cities[other_answer_num]}، {dates[other_answer_num]}،{times[other_answer_num]} {generate_verb()}"
         else:
-            return_sen = f"ِ{logics[answer_number]} دمای هوای {cities[answer_number]}، {dates[answer_number]} ،{times[answer_number]}  {logic_mode} از {logics[other_answer_num]} دمای {cities[other_answer_num]}، {dates[other_answer_num]}،{times[other_answer_num]} است "
+            return_sen = f"ِ{logics[answer_number]} دمای هوای {cities[answer_number]}، {dates[answer_number]} ،{times[answer_number]}  {logic_mode} از {logics[other_answer_num]} دمای {cities[other_answer_num]}، {dates[other_answer_num]}،{times[other_answer_num]} {generate_verb()} "
     return return_sen
 
 
@@ -104,7 +107,7 @@ def religion_sentence(result: dict) -> str:
     city = result["city"][0]
     date = date_from_str(result["date"][0])
     return random.choice([
-        f"{rel_time} به افق شهر {city} در تاریخِ {date}، ساعت {result['result']} است",
+        f"{rel_time} به افق شهر {city} در تاریخِ {date}، ساعت {result['result']} {generate_verb()}",
     ])
 
 
@@ -112,9 +115,9 @@ def time_sentence(result: dict, eq_string: str = None) -> str:
     city = city_random(result["city"][0])
     city_eq = city if eq_string is None else random.choice([eq_string, city])
     return random.choice([
-        f"در {city_eq} الان ساعت {result['result']} است",
-        f"ساعت فعلی {city_eq} در حال حاضر {result['result']} است",
-        f"ساعت فعلی {city_eq} ، {result['result']} است",
+        f"در {city_eq} الان ساعت {result['result']} {generate_verb()}",
+        f"ساعت فعلی {city_eq} در حال حاضر {result['result']} {generate_verb()}",
+        f"ساعت فعلی {city_eq} ، {result['result']} {generate_verb()}",
     ])
 
 
@@ -131,31 +134,28 @@ def date_sentence(result: dict) -> str:
 
     if event is not None:
         return random.choice([
-            f"در سالِ {convert_year(result['result'].split('-')[0])} مناسبت {event} در روزِ {convert_day(result['result'].split('-')[2])} ماهِ {convert_month(int(result['result'].split('-')[1]))} است",
+            f"در سالِ {convert_year(result['result'].split('-')[0])} مناسبت {event} در روزِ {convert_day(result['result'].split('-')[2])} ماهِ {convert_month(int(result['result'].split('-')[1]))} {generate_verb()}",
         ])
     else:
         if len(result["result"].split('-')) != 3:
             return random.choice([
-                f"مناسبتِ روزِ {date_str}، {result['result']} است",
+                f"مناسبتِ روزِ {date_str}، {result['result']} {generate_verb()}",
             ])
         else:
 
             if cal_type == "شمسی":
                 # TODO calendars types
                 return random.choice([
-                    f" {choose_date(result['result'], False)} معادلِ تاریخِ {date_from_str(result['result'])} در تقویم {cal_type} است",
-                    f"تاریخِ مدنظرِ شما معادلِ {date_from_str(result['result'])} است",
+                    f" {choose_date(result['result'], False)} معادلِ تاریخِ {date_from_str(result['result'])} در تقویم {cal_type} {generate_verb()}",
+                    f"تاریخِ مدنظرِ شما معادلِ {date_from_str(result['result'])} {generate_verb()}",
                 ])
             elif cal_type == "قمری" or cal_type == "هجری":
                 return random.choice([
-                    f"{choose_date(result['result'])} معادلِ تاریخِ {date_from_str_hijri(result['result'])} در تقویم {cal_type} است",
+                    f"{choose_date(result['result'])} معادلِ تاریخِ {date_from_str_hijri(result['result'])} در تقویم {cal_type} {generate_verb()}",
                 ])
             elif cal_type == "میلادی":
-                return random.choice([    """
-	Gets whole input srtring
-
-	"""
-                    f"{date_str} معادلِ تاریخِ {date_from_str_georgian(result['result'])} در تقویم {cal_type} است",
+                return random.choice([
+                    f"{date_str} معادلِ تاریخِ {date_from_str_georgian(result['result'])} در تقویم {cal_type} {generate_verb()}",
                 ])
 
 
@@ -280,3 +280,7 @@ def next_word():
 
 def previous_word():
     return random.choice(['قبل', 'گذشته'])
+
+
+def generate_verb():
+    return random.choice(["است", "می‌باشد", "اعلام می‌گردد"])

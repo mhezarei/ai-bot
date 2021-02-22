@@ -24,6 +24,7 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
         # method = "temp"
         time_len = len(answer["time"])
         if answer["religious_time"]:
+            time_len = 1
             time, answer["api_url"] = find_time_from_religious(answer)
             answer["time"].extend(time)
         if not answer["time"]:
