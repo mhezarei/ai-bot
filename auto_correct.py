@@ -5,7 +5,7 @@ pronunciations = [
     ['ب', 'پ', 'ت', 'د', 'ط'], ['گ', 'ق', 'غ', 'ف', 'ک'],
     ['ز', 'ذ', 'ض', 'ٰژ'], ['ث', 'س', 'ص'], ['ج', 'چ'], ['ح', 'ه'], ['ا', 'ع'],
 ]
-MAX_DIFF = 10
+MAX_DIFF = 2
 
 
 def close_pronunciation(letter: str) -> list:
@@ -51,7 +51,7 @@ def correct(word: str) -> str:
     for r in res.keys():
         if res[r] == 0:
             return r
-    for i in range(1, MAX_DIFF):
+    for i in range(1, MAX_DIFF + 1):
         close_words = [w for w, v in res.items() if v == i and len(word) == len(w)]
         if len(close_words) == 1:
             return close_words[0]
@@ -61,6 +61,7 @@ def correct(word: str) -> str:
                 close_p = close_pronunciation(diff_letter[1])
                 if close_p and word[diff_letter[0]] in close_p:
                     return w
+    return word
 
 
 def auto_correct(sentence: str):

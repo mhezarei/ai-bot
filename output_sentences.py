@@ -102,6 +102,10 @@ def weather_logical_sentence(answer: dict, logic1='', logic2='', logic_mode='', 
     return return_sen
 
 
+def weather_difference_sentence() -> str:
+    return ""
+
+
 def religion_sentence(result: dict) -> str:
     rel_time = result["religious_time"][0]
     city = result["city"][0]
