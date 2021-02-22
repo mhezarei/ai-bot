@@ -1,5 +1,6 @@
-from weather import Weather
 from datetime import datetime
+
+from weather import Weather
 
 
 def find_weather_from_city_date(Question, city, greg_date):

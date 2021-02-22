@@ -5,12 +5,13 @@ Created on Mon Feb  8 16:36:27 2021
 
 @author: mahsa
 """
-import requests as req
-import json
-import websockets
 import asyncio
+import json
 import re
-import time
+
+import requests as req
+import websockets
+
 
 async def send_file_nevisa(file,ip,size,name,comment):
    headers = {"subject": "SOF",

@@ -1,18 +1,16 @@
 import time
 
-from transformers import AutoTokenizer, AutoModelForTokenClassification, AutoConfig
+from transformers import AutoTokenizer, AutoModelForTokenClassification
 
-from split import split
 from answer_per_question import answer_per_question
-from deepmine import Deepmine
 from aryana import aryana
-from find_events_in_sentence import find_events_in_sentence
-from nevisa import nevisa
-from speechRec import google
-from find_time import reformat_date_time
+from auto_correct import auto_correct
 from find_dates import reformat_date
-#TODO
-from playsound import playsound
+from find_events_in_sentence import find_events_in_sentence
+from find_time import reformat_date_time
+from speechRec import google
+from split import split
+
 
 class BOT:
     def __init__(self):
@@ -31,23 +29,24 @@ class BOT:
     '''
 
     def AIBOT(self, Question):
-        start = time.time()
         answer = {'type': [], 'city': [], 'date': [],
                   'time': [], 'religious_time': [], 'calendar_type': [],
                   'event': [], 'api_url': [], 'result': []}
         answer_set = {'type': set(), 'city': set(), 'date': set(),
                       'time': set(), 'religious_time': set(), 'calendar_type': set(),
                       'event': set(), 'api_url': set(), 'result': []}
-
+        Question = auto_correct(Question)
+        # TODO
+        print("correct Question : " + Question)
         Question = reformat_date_time(Question)
         Question = reformat_date(Question)
 
-        # /var/www/AIBot/media/bert-base-parsbert-ner-uncased
+        # '/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased'
         tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
         model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
         events, event_keys = find_events_in_sentence(Question)
-        # Questions = split(Question, events)
-        Questions = Question.split(' . ')
+        Questions = split(Question, events)
+        # TODO
         print(str(Questions))
         final_answer = ""
         for sentence in Questions:
@@ -67,16 +66,11 @@ class BOT:
         for key in answer.keys():
             answer[key] = list(answer_set[key])
         final_answer = final_answer + " ."
-        # TODO extra part
+        # TODO DELETE
         print("generated_sentence : " + final_answer)
-        start = time.time()
         response = aryana(final_answer)
-        end = time.time()
-        print(f"Runtime of the text-to-speech API is {end - start}")
         with open("response.wav", mode='bw') as f:
             f.write(response.content)
-        playsound('response.wav')
-        # TODO
         return answer, final_answer
 
     '''
@@ -111,22 +105,25 @@ class BOT:
         # m = Deepmine()
         # # get text of your file! return status,text: if status==0 error occured.
         # status,text = m.get_text(Address)
-
+        # TODO
         print("Text::", text)
 
         end = time.time()
         print(f"Runtime of the speechRecognition API is {end - start}")
 
         answer, generated_sentence = self.AIBOT(text)
+        # TODO DELETE THIS LINE
+        # generated_sentence = ''
         print("generated_sentence : " + generated_sentence)
-        start = time.time()
+        # start = time.time()
 
         response = aryana(generated_sentence)
 
         end = time.time()
         print(f"Runtime of the text-to-speech API is {end - start}")
 
-        with open("response.wav", mode='bw') as f:
-            f.write(response.content)
+        # TODO DELETE THIS
+        # with open("response.wav", mode='bw') as f:
+        #     f.write(response.content)
 
         return answer, response

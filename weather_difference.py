@@ -1,6 +1,5 @@
 from find_weather_from_city_date import find_weather_from_city_date
 from utility import convert_date
-from datetime import datetime
 
 
 def weather_difference(Question, answer, str_separator):
@@ -15,7 +14,6 @@ def weather_difference(Question, answer, str_separator):
     city, date1, time1 = extract_second(answer)
     greg_date1 = convert_date(date1, "shamsi",
                               "greg") + " " + time1
-    # TODO IF CITY ARE SAME
     weather_words = ["حداکثر", "بیشترین", "گرمترین", "گرم‌ترین",
                      "گرم ترین", "حداقل", "کمترین", "کمینه", "میانگین",
                      'دما', 'درجه', 'اندازه', 'چقدر', 'میزان']

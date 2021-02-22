@@ -6,9 +6,11 @@ Created on Mon Dec 21 10:55:00 2020
 @author: mahsa
 """
 
-import requests as rq
-import json
 import datetime
+import json
+
+import requests as rq
+
 
 class Deepmine():
     def __init__(self):

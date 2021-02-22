@@ -1,3 +1,8 @@
+import datetime
+
+import dateparser
+from persiantools.jdatetime import JalaliDate
+
 from find import find
 from find_fit_word import find_fit_word
 from find_time_from_religious import find_time_from_religious
@@ -8,7 +13,6 @@ from output_sentences import religion_sentence, time_sentence, date_sentence, un
     weather_logical_sentence
 from utility import convert_date
 from weather_difference import weather_difference
-import datetime
 
 
 def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
@@ -27,9 +31,14 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
             time_len = 1
             time, answer["api_url"] = find_time_from_religious(answer)
             answer["time"].extend(time)
+        en_datetime = dateparser.parse('امروز',
+                                       settings={'TIMEZONE': '+0330'})
+        naive_dt = JalaliDate(en_datetime)
+        d1 = datetime.datetime.strptime(answer['date'][0], "%Y-%m-%d")
+        difference_days = d1.day - naive_dt.day
         if not answer["time"]:
             hour = datetime.datetime.now().hour
-            if hour < 12:
+            if hour < 12 or difference_days > 0:
                 answer["time"] = ["12:00"]
             else:
                 if (hour + 1) == 24:
@@ -37,19 +46,15 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                 time = str(
                     str(hour + 1).zfill(2) + ":" + str(datetime.datetime.now().minute).zfill(2))
                 answer["time"] = [time]
-                print("time : " + str(answer["time"]))
 
         try:
 
             if "اختلاف" in Question or "تفاوت" in Question:
                 temps, urls, logic1, logic2 = weather_difference(Question, answer, ' و ')
-                print(str(temps[0]) + "      ---    " + str(temps[1]))
                 temp = round(abs(temps[1] - temps[0]), 2)
                 answer_mode = 1
             elif "سردتر " in Question or "سرد تر " in Question:
                 temps, urls, logic1, logic2 = weather_difference(Question, answer, ' یا ')
-                print(str(temps[0]) + "      ---    " + str(temps[1]))
-
                 if temps[1] < temps[0]:
                     answer_number = 1
                     temp = find_fit_word(answer, True)
@@ -59,7 +64,6 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                 answer_mode = 2
             elif "گرم‌تر " in Question or "گرمتر " in Question or "گرم تر " in Question:
                 temps, urls, logic1, logic2 = weather_difference(Question, answer, ' یا ')
-                print(str(temps[0]) + "      ---    " + str(temps[1]))
                 if temps[1] > temps[0]:
                     answer_number = 1
                     temp = find_fit_word(answer, True)
@@ -129,7 +133,6 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
             else:
                 if answer["calendar_type"] and answer["date"]:
                     target = answer["calendar_type"][0]
-                    print(target)
                     if target == "شمسی":
                         answer["result"] = convert_date(answer["date"][0],
                                                         "shamsi", "shamsi")

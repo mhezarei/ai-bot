@@ -8,12 +8,12 @@ def main():
 
     my_bot = BOT()
 
-    sentence = "دمای هوای در زمان نیمه شب شرعی فردای قم چقدر است؟  "
+    sentence = "ادان ظهر تهران کی است"
     answer, answer_sen = my_bot.AIBOT(sentence)
-    print(answer)
+    # print(answer)
     # answer = my_bot.aibot('input.wav')
 
-    # print(answer)
+    print(answer)
     # print("final answer : " + answer_sen)
 
     end = time.time()

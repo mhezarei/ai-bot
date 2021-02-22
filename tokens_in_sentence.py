@@ -1,4 +1,4 @@
-from hazm import word_tokenize, Lemmatizer
+from hazm import Lemmatizer
 
 
 def find_tokens_in_sentence(sentence_ner, sentence_ner_lem):
@@ -45,5 +45,6 @@ def find_tokens_in_sentence(sentence_ner, sentence_ner_lem):
 			tokens += [{'word': token['word'],
 			            'entity_group': token['entity'].split('-')[1],
 			            'index': token['index']}]
+	#TODO
 	print(tokens)
 	return tokens, tokens_lem

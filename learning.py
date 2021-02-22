@@ -8,12 +8,11 @@ import numpy as np
 import pandas as pd
 from rule_based import rule_based_score
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense, LSTM
+from tensorflow.keras.layers import Embedding, Dense, LSTM
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.models import model_from_json
-import tensorflow as tf
 
 mapping = {0: "weather",
            1: "religious time",
@@ -107,6 +106,3 @@ def predict(sent: str) -> int:
                 return s
             else:
                 return -1
-
-
-print(predict('من کسحلم '))

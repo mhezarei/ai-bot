@@ -1,9 +1,10 @@
-from datetime import datetime, timezone
+import os
+from datetime import datetime
 from typing import Tuple
+
 import jdatetime
 import pandas as pd
 from hijri_converter import convert
-import os
 
 
 def get_english_names(city: str) -> Tuple[str, str]:

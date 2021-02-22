@@ -1,5 +1,5 @@
-import json
 import requests
+
 from utility import *
 
 
@@ -8,7 +8,6 @@ class Weather:
 				 full_day: bool = False):
 		self.city, self.country = get_english_names(city)
 		self.lat, self.lon = get_lat_lon(self.city)
-		print(dt.split(" ")[0])
 		self.day = parse_datetime(dt.split(" ")[0] + " 03:00")
 		self.dt = parse_datetime(dt)
 		self.current_dt = current_dt
@@ -75,9 +74,6 @@ class Weather:
 	def parse_full(self, data) -> list:
 		start_time = self.day + 12600
 		finish_time = start_time + (23 * 3600)
-		print("dt : " + str(self.dt))
-		print("start time : " + str(start_time))
-		print("finish time : " + str(finish_time))
 		minimums = [t["main"]["temp_min"] for t in data["list"] if start_time <= t["dt"] <= finish_time]
 		maximums = [t["main"]["temp_max"] for t in data["list"] if start_time <= t["dt"] <= finish_time]
 		averages = [t["main"]["temp"] for t in data["list"] if start_time <= t["dt"] <= finish_time]
@@ -85,6 +81,4 @@ class Weather:
 			mid = 0.00
 		else:
 			mid = round(sum(averages) / len(averages), 2)
-		print("mins : " + str(minimums))
-
 		return [min(minimums), max(maximums), mid]

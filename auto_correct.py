@@ -1,4 +1,5 @@
 import numpy as np
+from hazm import *
 
 pronunciations = [
     ['ب', 'پ', 'ت', 'د', 'ط'], ['گ', 'ق', 'غ', 'ف', 'ک'],
@@ -19,12 +20,12 @@ def lv(s, t):
     cols = len(t) + 1
     r, c = 0, 0
     distance = np.zeros((rows, cols), dtype=int)
-    
+
     for i in range(1, rows):
         for k in range(1, cols):
             distance[i][0] = i
             distance[0][k] = k
-    
+
     for col in range(1, cols):
         for row in range(1, rows):
             r, c = row, col
@@ -35,7 +36,7 @@ def lv(s, t):
             distance[row][col] = min(distance[row - 1][col] + 1,
                                      distance[row][col - 1] + 1,
                                      distance[row - 1][col - 1] + cost)
-    
+
     return distance[r][c]
 
 
@@ -43,7 +44,7 @@ def correct(word: str) -> str:
     with open('argument_corpse.txt') as f:
         data = f.read().split('\n')
         data.remove('')
-    
+
     distances = {w: lv(w, word) for w in data}
     res = {k: v for k, v in
            sorted(distances.items(), key=lambda item: item[1], reverse=True)}
@@ -60,6 +61,16 @@ def correct(word: str) -> str:
                 close_p = close_pronunciation(diff_letter[1])
                 if close_p and word[diff_letter[0]] in close_p:
                     return w
-                
 
-print(correct("ادان صبح"))
+
+def auto_correct(sentence: str):
+    symbols = "!\"#$%&()*+-./;<=>?@[\\]^_`{|}~\n،,؟؛"
+    for i in symbols:
+        sentence = str.replace(sentence, i, ' ')
+    words = word_tokenize(sentence)
+    new_sen = ""
+    for i in range(len(words) - 1):
+        words[i] = correct(words[i])
+        new_sen = new_sen + " " + words[i]
+    new_sen = new_sen + " " + words[-1]
+    return new_sen

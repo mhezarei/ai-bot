@@ -1,6 +1,5 @@
-from transformers import pipeline
 from hazm import word_tokenize, Lemmatizer, Normalizer
-import os
+from transformers import pipeline
 
 from capitals import capital_dictionary_keys, country_to_capital
 
@@ -19,10 +18,6 @@ def pipeline_sentence(sentence, model, tokenizer):
 
 
 def change_words(sentence):
-    symbols = "!\"#$%&()*+-./;<=>?@[\\]^_`{|}~\n،,؟؛"
-    for i in symbols:
-        sentence = str.replace(sentence, i, ' ')
-
     if "پایتخت" in sentence:
         for key in capital_dictionary_keys():
             if key in sentence:

@@ -1,8 +1,8 @@
 import os
+from typing import Tuple
 
 import pandas as pd
 from hazm import *
-from typing import Tuple
 
 unused_chars = ['-', '،', '_', '\n', '//', '/', '\u200c', 'ـ', '?', '؟']
 norm = Normalizer()

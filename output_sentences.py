@@ -1,5 +1,5 @@
-from datetime import datetime
 import random
+from datetime import datetime
 
 import dateparser
 import num2fawords
@@ -144,7 +144,6 @@ def date_sentence(result: dict) -> str:
         else:
 
             if cal_type == "شمسی":
-                # TODO calendars types
                 return random.choice([
                     f" {choose_date(result['result'], False)} معادلِ تاریخِ {date_from_str(result['result'])} در تقویم {cal_type} {generate_verb()}",
                     f"تاریخِ مدنظرِ شما معادلِ {date_from_str(result['result'])} {generate_verb()}",
@@ -192,6 +191,8 @@ def convert_day(day):
         day = days[0] + "و" + " " + days[1]
     else:
         day = days[0]
+    if day == "سیم" :
+        day = "سی‌اُم"
     return day
 
 
@@ -256,8 +257,6 @@ def relative_day(date_str):
                                    settings={'TIMEZONE': '+0330'})
     naive_dt = JalaliDate(en_datetime)
     d1 = datetime.strptime(date_str, "%Y-%m-%d")
-    print(naive_dt)
-    print(d1)
     difference_days = d1.day - naive_dt.day
     return {
         -30: random.choice([f'ماه {previous_word()}']),
