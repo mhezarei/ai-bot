@@ -66,8 +66,8 @@ def reformat_date_time(string):
     persian_num.results()
     return persian_num.num
 
-  string = string.replace('ربع', '15 دقیقه')
-  string = string.replace('نیم', '30 دقیقه')
+  string = string.replace(' ربع ', '15 دقیقه')
+  string = string.replace(' نیم ', '30 دقیقه')
 
   """ ساعت 3 و بیست و دو دقیقه """
   numbers = [x.group() for x in re.finditer(r"ساعت ([\u0660-\u0669]|\d)+ و ((([\u0600-\u0659]|[\u0670-\u06EF])+ دقیقه)|(([\u0600-\u0659]|[\u0670-\u06EF])+ و ([\u0600-\u0659]|[\u0670-\u06EF])+ دقیقه))", string)]

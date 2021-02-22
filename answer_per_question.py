@@ -4,7 +4,8 @@ from find_time_from_religious import find_time_from_religious
 from find_weather_from_city_date import find_weather_from_city_date
 from learning import predict
 from mhr_time import Time
-from output_sentences import religion_sentence, time_sentence, date_sentence, unknown_sentence, weather_sentence
+from output_sentences import religion_sentence, time_sentence, date_sentence, unknown_sentence, weather_sentence, \
+    weather_logical_sentence
 from utility import convert_date
 from weather_difference import weather_difference
 import datetime
@@ -38,32 +39,37 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                 print("time : " + str(answer["time"]))
 
         try:
-            answer_mode = 0
+
             if "اختلاف" in Question or "تفاوت" in Question:
-                temps, urls = weather_difference(Question, answer, ' و ')
+                temps, urls, logic1, logic2 = weather_difference(Question, answer, ' و ')
                 print(str(temps[0]) + "      ---    " + str(temps[1]))
                 temp = round(abs(temps[1] - temps[0]), 2)
                 answer_mode = 1
             elif "سردتر " in Question or "سرد تر " in Question:
-                temps, urls = weather_difference(Question, answer, ' یا ')
+                temps, urls, logic1, logic2 = weather_difference(Question, answer, ' یا ')
                 print(str(temps[0]) + "      ---    " + str(temps[1]))
+
                 if temps[1] < temps[0]:
+                    answer_number = 1
                     temp = find_fit_word(answer, True)
                 else:
+                    answer_number = 0
                     temp = find_fit_word(answer, False)
                 answer_mode = 2
             elif "گرم‌تر " in Question or "گرمتر " in Question or "گرم تر " in Question:
-                temps, urls = weather_difference(Question, answer, ' یا ')
+                temps, urls, logic1, logic2 = weather_difference(Question, answer, ' یا ')
                 print(str(temps[0]) + "      ---    " + str(temps[1]))
                 if temps[1] > temps[0]:
+                    answer_number = 1
                     temp = find_fit_word(answer, True)
                 else:
+                    answer_number = 0
                     temp = find_fit_word(answer, False)
                 answer_mode = 3
             else:
                 greg_date = convert_date(answer["date"][0], "shamsi",
                                          "greg") + " " + answer["time"][0]
-                temp, cond, url = find_weather_from_city_date(Question, answer["city"][0], greg_date)
+                temp, cond, url, logic1 = find_weather_from_city_date(Question, answer["city"][0], greg_date)
                 urls = [url]
                 answer_mode = 4
             answer["api_url"].extend(urls)
@@ -71,21 +77,23 @@ def answer_per_question(Question, model, tokenizer, all_events, all_event_keys):
                 answer["result"] = str(temp)
             elif method == "cond":
                 answer["result"] = cond
-
-            if answer["religious_time"]:
-                answer["time"] = []
             if time_len == 0:
                 answer["time"] = []
             else:
-                answer["time"] = answer[:time_len]
+                answer["time"] = answer["time"][:time_len]
             if answer_mode == 0:
                 pass
             elif answer_mode == 1:
-                pass
+                answer_sentence = weather_logical_sentence(answer, logic1, logic2, 'اختلاف')
             elif answer_mode == 2:
-                pass
+                answer_sentence = weather_logical_sentence(answer, logic1, logic2, 'سردتر', answer_number)
             elif answer_mode == 3:
-                pass
+                answer_sentence = weather_logical_sentence(answer, logic1, logic2, 'گرمتر', answer_number)
+            elif answer_mode == 4:
+                answer_sentence = weather_sentence(answer, logic1)
+            if answer["religious_time"]:
+                answer["time"] = []
+
         except Exception:
             # raise ValueError("Type 1 Error!")
             pass
