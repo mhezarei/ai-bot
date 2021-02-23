@@ -58,7 +58,7 @@ def correct(word: str) -> str:
         close_words = [w for w, v in res.items() if v == i]
         if len(close_words) == 1:
             return close_words[0]
-        else:
+        elif len(close_words) <= 3:
             for w in close_words:
                 if len(w) == len(word):
                     diff_letter = [(i, c) for i, c in enumerate(w) if c != word[i]][0]
@@ -114,4 +114,4 @@ def auto_correct(sentence: str):
     return new_sen[:-1]
 
 
-auto_correct("اذان ژهر به افق تران کی است؟")
+auto_correct("اذان ژهر به در حال حاضر افق تران کی است؟")
