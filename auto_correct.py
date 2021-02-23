@@ -1,5 +1,9 @@
+import time
+
 import numpy as np
 from hazm import *
+import os
+import pandas as pd
 
 pronunciations = [
     ['ب', 'پ', 'ت', 'د', 'ط'], ['گ', 'ق', 'غ', 'ف', 'ک'],
@@ -64,14 +68,41 @@ def correct(word: str) -> str:
     return word
 
 
+def load_lists():
+    p = os.path.dirname(os.path.abspath(__file__))
+    url = os.path.join(p, "fa_cities_final2.csv")
+    df = pd.read_csv(url)
+    cities = df['city-fa']
+
+    url = os.path.join(p, "important_words.csv")
+    df = pd.read_csv(url)
+    important_words = df['words']
+
+    url = os.path.join(p, "find important events.csv")
+    df = pd.read_csv(url)
+    events = df['event']
+
+    url = os.path.join(p, "countries.csv")
+    df = pd.read_csv(url)
+    countries = df['country']
+    return cities, important_words, events, countries
+
+
 def auto_correct(sentence: str):
+    start = time.time()
+    cities, important_word, events, countries = load_lists()
+
+
     symbols = "!\"#$%&()*+-./;<=>?@[\\]^_`{|}~\n،,؟؛"
     for i in symbols:
         sentence = str.replace(sentence, i, ' ')
     words = word_tokenize(sentence)
+
     new_sen = ""
     for i in range(len(words) - 1):
         words[i] = correct(words[i])
-        new_sen = new_sen + " " + words[i]
-    new_sen = new_sen + " " + words[-1]
+        new_sen = new_sen + " " + str(words[i])
+    new_sen = new_sen + " " + str(words[-1])
+    end = time.time()
+    print(f"Runtime of the correction is {end - start}")
     return new_sen
