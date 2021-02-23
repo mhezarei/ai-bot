@@ -11,7 +11,7 @@ from hazm import *
 
 
 combs = []
-with open("Intents/split_combs", "r") as a_file:
+with open("split_combs", "r") as a_file:
     for line in a_file:
         combs.append(line.strip())
 
