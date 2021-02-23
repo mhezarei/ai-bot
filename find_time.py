@@ -54,8 +54,6 @@ def find_date_time(tokens_lem, sentence):
             times.append(raw_hour.zfill(2) + ':' + raw_minutes.zfill(2))
 
     times = [unidecode(time) for time in times]
-    #TODO
-    print("times : " + str(times))
 
     return times
 

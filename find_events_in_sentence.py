@@ -26,6 +26,4 @@ def find_events_in_sentence(sentence):
         if not more_events[key] in events and key in sentence:
             events.append(more_events[key])
             event_keys.append(more_events[key])
-    #TODO
-    print("all events : " + str(events))
     return events, event_keys

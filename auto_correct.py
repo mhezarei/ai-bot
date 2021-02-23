@@ -68,30 +68,8 @@ def correct(word: str) -> str:
     return word
 
 
-def load_lists():
-    p = os.path.dirname(os.path.abspath(__file__))
-    url = os.path.join(p, "fa_cities_final2.csv")
-    df = pd.read_csv(url)
-    cities = df['city-fa']
-
-    url = os.path.join(p, "important_words.csv")
-    df = pd.read_csv(url)
-    important_words = df['words']
-
-    url = os.path.join(p, "find important events.csv")
-    df = pd.read_csv(url)
-    events = df['event']
-
-    url = os.path.join(p, "countries.csv")
-    df = pd.read_csv(url)
-    countries = df['country']
-    return cities, important_words, events, countries
-
-
 def auto_correct(sentence: str):
     start = time.time()
-    cities, important_word, events, countries = load_lists()
-
 
     symbols = "!\"#$%&()*+-./;<=>?@[\\]^_`{|}~\n،,؟؛"
     for i in symbols:

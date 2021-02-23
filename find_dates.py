@@ -70,8 +70,6 @@ def find_dates(sentence_lem):
         fa_dates[i] = f"{year}-{month}-{day}"
 
     fa_dates = [x for _, x in sorted(zip(indexes, fa_dates))]
-    #TODO
-    print("dates : " + str(fa_dates))
     return fa_dates
 
 

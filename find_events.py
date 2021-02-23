@@ -45,7 +45,5 @@ def find_events(sentence, dates, all_events, all_event_keys):
                     break
         if len(new_dates) == 0:
             new_dates = dates
-    #TODO
-    print("events : " + str(events))
 
     return events, new_dates
