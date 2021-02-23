@@ -1,5 +1,4 @@
 import time
-
 import numpy as np
 from hazm import *
 import os
@@ -45,7 +44,7 @@ def lv(s, t):
 
 
 def correct(word: str) -> str:
-    with open('argument_corpse.txt') as f:
+    with open('new_argument_corpse.txt') as f:
         data = f.read().split('\n')
         data.remove('')
 
@@ -56,14 +55,18 @@ def correct(word: str) -> str:
         if res[r] == 0:
             return r
     for i in range(1, MAX_DIFF + 1):
-        close_words = [w for w, v in res.items() if v == i and len(word) == len(w)]
+        close_words = [w for w, v in res.items() if v == i]
         if len(close_words) == 1:
             return close_words[0]
         else:
             for w in close_words:
-                diff_letter = [(i, c) for i, c in enumerate(w) if c != word[i]][0]
-                close_p = close_pronunciation(diff_letter[1])
-                if close_p and word[diff_letter[0]] in close_p:
+                if len(w) == len(word):
+                    diff_letter = [(i, c) for i, c in enumerate(w) if c != word[i]][0]
+                    close_p = close_pronunciation(diff_letter[1])
+                    if close_p and word[diff_letter[0]] in close_p:
+                        return w
+            for w in close_words:
+                if len(w) != len(word):
                     return w
     return word
 
@@ -92,17 +95,22 @@ def auto_correct(sentence: str):
     start = time.time()
     cities, important_word, events, countries = load_lists()
 
-
     symbols = "!\"#$%&()*+-./;<=>?@[\\]^_`{|}~\n،,؟؛"
     for i in symbols:
-        sentence = str.replace(sentence, i, ' ')
-    words = word_tokenize(sentence)
+        sentence = str.replace(sentence, i, '')
+    words = POSTagger(model="postagger.model").tag(word_tokenize(sentence))
+    print(words)
 
     new_sen = ""
-    for i in range(len(words) - 1):
-        words[i] = correct(words[i])
-        new_sen = new_sen + " " + str(words[i])
-    new_sen = new_sen + " " + str(words[-1])
+    for w in words:
+        if w[1] in ["N", "Ne", "AJ"]:
+            new_sen += correct(w[0]) + ' '
+        else:
+            new_sen += w[0] + ' '
     end = time.time()
+    print(new_sen)
     print(f"Runtime of the correction is {end - start}")
-    return new_sen
+    return new_sen[:-1]
+
+
+auto_correct("اذان ظهر به افق شیراژ کی است؟")
