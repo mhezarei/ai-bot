@@ -47,8 +47,8 @@ class BOT:
             pass
 
         # '/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased'
-        tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
-        model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
+        tokenizer = AutoTokenizer.from_pretrained('/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased')
+        model = AutoModelForTokenClassification.from_pretrained('/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased')
 
         try:
             events, event_keys = find_events_in_sentence(Question)
@@ -79,6 +79,9 @@ class BOT:
         for key in answer.keys():
             answer[key] = list(answer_set[key])
         final_answer = final_answer + " ."
+
+        return answer, final_answer
+
 
     '''
     This method takes an string as input, the string contains the address of .wav file.
