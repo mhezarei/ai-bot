@@ -1,14 +1,15 @@
 import time
 
 from aibot import BOT
+import tensorflow as tf
+import os
 
 
 def main():
     start = time.time()
 
     my_bot = BOT()
-
-    sentence = "دمای هوای  در ساعت ۱۲:۰۱ در تاریخ ۱۲ بهمن سال ۹۸ نیمه شب شرعی مشهد فردا چقدر است؟"
+    sentence = "دمای هوای امروز تهران چقدر است و بهترین بازیکن فوتبال؟"
     answer, answer_sen = my_bot.AIBOT(sentence)
     # print(answer)
     # answer = my_bot.aibot('input.wav')

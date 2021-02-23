@@ -36,7 +36,7 @@ class BOT:
                       'time': set(), 'religious_time': set(), 'calendar_type': set(),
                       'event': set(), 'api_url': set(), 'result': []}
         # Question = auto_correct(Question)
-        try :
+        try:
             Question = reformat_date_time(Question)
         except:
             pass
@@ -46,9 +46,11 @@ class BOT:
         except:
             pass
 
-        # '/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased'
-        tokenizer = AutoTokenizer.from_pretrained('/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased')
-        model = AutoModelForTokenClassification.from_pretrained('/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased')
+        '/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased'
+        tokenizer = AutoTokenizer.from_pretrained(
+            '/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased')
+        model = AutoModelForTokenClassification.from_pretrained(
+            '/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased')
 
         try:
             events, event_keys = find_events_in_sentence(Question)
@@ -59,6 +61,7 @@ class BOT:
         try:
             Questions = split(Question, events)
         except:
+            Questions = [Question]
             pass
 
         final_answer = ""
@@ -82,7 +85,6 @@ class BOT:
 
         return answer, final_answer
 
-
     '''
     This method takes an string as input, the string contains the address of .wav file.
 
@@ -99,8 +101,6 @@ class BOT:
         You should implement your code right here.
         '''
 
-        start = time.time()
-
         file = open(Address, mode='rb')
 
         """ Google """
@@ -115,25 +115,12 @@ class BOT:
         # m = Deepmine()
         # # get text of your file! return status,text: if status==0 error occured.
         # status,text = m.get_text(Address)
-        # TODO
-        print("Text::", text)
-
-        end = time.time()
-        print(f"Runtime of the speechRecognition API is {end - start}")
 
         answer, generated_sentence = self.AIBOT(text)
-        # TODO DELETE THIS LINE
-        # generated_sentence = ''
-        print("generated_sentence : " + generated_sentence)
-        # start = time.time()
 
         response = aryana(generated_sentence)
 
-        end = time.time()
-        print(f"Runtime of the text-to-speech API is {end - start}")
-
-        # TODO DELETE THIS
-        # with open("response.wav", mode='bw') as f:
-        #     f.write(response.content)
+        with open("response.wav", mode='bw') as f:
+            f.write(response.content)
 
         return answer, response
