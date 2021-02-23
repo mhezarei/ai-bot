@@ -8,7 +8,7 @@ pronunciations = [
     ['ب', 'پ', 'ت', 'د', 'ط'], ['گ', 'ق', 'غ', 'ف', 'ک'],
     ['ز', 'ذ', 'ض', 'ٰژ'], ['ث', 'س', 'ص'], ['ج', 'چ'], ['ح', 'ه'], ['ا', 'ع'],
 ]
-MAX_DIFF = 2
+MAX_DIFF = 1
 
 
 def close_pronunciation(letter: str) -> list:
@@ -98,15 +98,16 @@ def auto_correct(sentence: str):
     symbols = "!\"#$%&()*+-./;<=>?@[\\]^_`{|}~\n،,؟؛"
     for i in symbols:
         sentence = str.replace(sentence, i, '')
-    words = POSTagger(model="postagger.model").tag(word_tokenize(sentence))
+    words = word_tokenize(sentence)
+    # words = POSTagger(model="postagger.model").tag(word_tokenize(sentence))
     print(words)
 
     new_sen = ""
     for w in words:
-        if w[1] in ["N", "Ne", "AJ"]:
-            new_sen += correct(w[0]) + ' '
-        else:
-            new_sen += w[0] + ' '
+        # if w[1] in ["N", "Ne", "AJ"]:
+        new_sen += correct(w) + ' '
+        # else:
+        #     new_sen += w[0] + ' '
     end = time.time()
     print(new_sen)
     print(f"Runtime of the correction is {end - start}")
