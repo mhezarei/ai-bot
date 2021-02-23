@@ -11,7 +11,7 @@ from hazm import *
 
 
 combs = []
-with open("split_combs", "r") as a_file:
+with open("Intents/split_combs", "r") as a_file:
     for line in a_file:
         combs.append(line.strip())
 
@@ -276,39 +276,6 @@ def split(sent, events):
     firsts = first_split(comb_indexes, words)
     sents = complete_split(firsts)
     return replace_dic(dic, sents)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
 
 
 
