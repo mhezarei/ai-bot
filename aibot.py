@@ -35,19 +35,32 @@ class BOT:
         answer_set = {'type': set(), 'city': set(), 'date': set(),
                       'time': set(), 'religious_time': set(), 'calendar_type': set(),
                       'event': set(), 'api_url': set(), 'result': []}
-        Question = auto_correct(Question)
-        # TODO
-        print("correct Question : " + Question)
-        Question = reformat_date_time(Question)
-        Question = reformat_date(Question)
+        # Question = auto_correct(Question)
+        try :
+            Question = reformat_date_time(Question)
+        except:
+            pass
+
+        try:
+            Question = reformat_date(Question)
+        except:
+            pass
 
         # '/var/www/AIBot/media/codes/user_zivdar1matin@gmail.com/bert-base-parsbert-ner-uncased'
         tokenizer = AutoTokenizer.from_pretrained("bert-base-parsbert-ner-uncased")
         model = AutoModelForTokenClassification.from_pretrained("bert-base-parsbert-ner-uncased")
-        events, event_keys = find_events_in_sentence(Question)
-        Questions = split(Question, events)
-        # TODO
-        print(str(Questions))
+
+        try:
+            events, event_keys = find_events_in_sentence(Question)
+        except:
+            events = []
+            event_keys = []
+
+        try:
+            Questions = split(Question, events)
+        except:
+            pass
+
         final_answer = ""
         for sentence in Questions:
             q_answer, answer_sen = answer_per_question(sentence, model, tokenizer, events, event_keys)
@@ -66,12 +79,6 @@ class BOT:
         for key in answer.keys():
             answer[key] = list(answer_set[key])
         final_answer = final_answer + " ."
-        # TODO DELETE
-        print("generated_sentence : " + final_answer)
-        response = aryana(final_answer)
-        with open("response.wav", mode='bw') as f:
-            f.write(response.content)
-        return answer, final_answer
 
     '''
     This method takes an string as input, the string contains the address of .wav file.
