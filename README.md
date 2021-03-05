@@ -1,6 +1,6 @@
 # ai-bot
 This repository contains all the code our team developed for the [2020
-AI-bot challenge](ai-bot.ir), which receives an input question, recognizes the
+AI-bot challenge](https://ai-bot.ir/), which receives an input question, recognizes the
 question's category, and answers it. There are some specifications relating to 
 how you should ask a question which will be explained later on.
 
